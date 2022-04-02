@@ -18,18 +18,19 @@
 # 生产环境使用请做好评估；
 # 体验
 1.在线体验iotcs后台：http://127.0.0.1/  
-2.用户名 admin 密码 000000  
+2.用户名 admin 密码 000000   
 ![image](images/1648891279.jpg)
 # 运行
 ## windows主机运行：
 1.安装.net core3.1
 ## linux/amd64,win/amd64 docker运行(官方仓)
 ## linux/arm64 docker运行(官方仓)
-## 登入系统
-1.用户名 admin,密码 000000
 # 采集配置
+#### 登入系统
+* 用户名 admin,密码 000000  
 ![image](images/1648884682.jpg)
 #### 驱动管理
+* 驱动配置  
 ![image](images/1648891338.jpg)
 ![image](images/1648891309.jpg)
 #### 设备管理
