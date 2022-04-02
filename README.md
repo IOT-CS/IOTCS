@@ -23,3 +23,11 @@
 ![image](images/1648891338.jpg)
 ![image](images/1648891377.jpg)
 ![image](images/1648891419.jpg)
+# 运行
+## windows主机运行：
+1.安装.net core3.1
+## linux/amd64,win/amd64 docker运行(官方仓)
+## linux/arm64 docker运行(官方仓)
+## 登入系统
+1.用户名 admin,密码 000000
+# 采集配置
