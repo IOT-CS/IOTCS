@@ -20,10 +20,6 @@
 1.在线体验iotcs后台：http://127.0.0.1/  
 2.用户名 admin 密码 000000  
 ![image](images/1648891279.jpg)
-![image](images/1648891309.jpg)
-![image](images/1648891338.jpg)
-![image](images/1648891377.jpg)
-![image](images/1648891419.jpg)
 # 运行
 ## windows主机运行：
 1.安装.net core3.1
@@ -33,3 +29,7 @@
 1.用户名 admin,密码 000000
 # 采集配置
 ![image](images/1648884682.jpg)
+![image](images/1648891338.jpg)
+![image](images/1648891309.jpg)
+![image](images/1648891377.jpg)
+![image](images/1648891419.jpg)
