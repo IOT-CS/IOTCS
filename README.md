@@ -37,7 +37,7 @@
 * 设备参数配置  
 * 设备变量配置  
 ![image](images/device.jpg)
-![image](images/datalocation.png)
+![image](images/datalocation.jpg)
 #### 规则管理
 * 规则列表
 * 资源管理  
