@@ -17,7 +17,6 @@
 # 体验
 1.在线体验iotcs后台：http://127.0.0.1/  
 2.用户名 admin 密码 000000  
-![image](images/1648884682.jpg)
 ![image](images/1648891279.jpg)
 ![image](images/1648891309.jpg)
 ![image](images/1648891338.jpg)
@@ -31,3 +30,4 @@
 ## 登入系统
 1.用户名 admin,密码 000000
 # 采集配置
+![image](images/1648884682.jpg)
