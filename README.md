@@ -15,3 +15,6 @@
 # 免责声明
 # 生产环境使用请做好评估；
 # 体验
+1.在线体验iotcs后台：http://127.0.0.1/  
+2.用户名 admin 密码 000000  
+![image](https://github.com/IOT-CS/IOTCS/blob/febad61e21ae51a9e67b348256d305cf9e1821a6/images/1648884682.jpg)
