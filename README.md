@@ -29,7 +29,10 @@
 1.用户名 admin,密码 000000
 # 采集配置
 ![image](images/1648884682.jpg)
+#### 新增驱动
 ![image](images/1648891338.jpg)
 ![image](images/1648891309.jpg)
+#### 设备管理
+![image](images/device.jpg)
 ![image](images/1648891377.jpg)
 ![image](images/1648891419.jpg)
