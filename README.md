@@ -36,5 +36,8 @@
 * 设备组的统一管理，设备通过父级ID关联设备组
 * 设备参数配置  
 ![image](images/device.jpg)
+#### 规则管理
+* 规则列表
+* 资源管理  
 ![image](images/1648891377.jpg)
 ![image](images/1648891419.jpg)
