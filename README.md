@@ -44,4 +44,5 @@
 ![image](images/1648891377.jpg)
 ![image](images/1648891419.jpg)
 #### 设备日志
-* 诊断日志
+* 诊断日志   
+![image](images/log.jpg)
