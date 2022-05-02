@@ -23,8 +23,13 @@
 ## windows主机运行：
 1.下载windows运行环境：安装.net core3.1   
   官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-linux-x64-binaries   
-2.下载release 版本 
-## linux/amd64,win/amd64 docker运行(官方仓)
+2.下载release 版本   
+3.windows 运行请在生产环境中安装成windows服务
+## linux主机运行：
+1.下载windows运行环境：安装.net core3.1   
+  官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-linux-x64-binaries   
+2.下载release 版本   
+3.Linux 运行请安装成systemd服务
 ## linux/arm64 docker运行(官方仓)
 # 采集配置
 #### 登入系统
