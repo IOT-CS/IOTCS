@@ -19,7 +19,7 @@
 # 体验
 * 在线体验iotcs后台：http://127.0.0.1/    
 ![image](images/1648891279.jpg)
-# 运行
+# 安装运行条件
 ## windows主机运行：
 1.下载windows运行环境：安装.net core3.1   
   官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-linux-x64-binaries   
