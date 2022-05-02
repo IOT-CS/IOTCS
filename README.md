@@ -48,7 +48,8 @@ SyslogIdentifier=dotnet-zl
 Environment=ASPNETCORE_ENVIRONMENT=Production   
 Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false   
 
-
+[Install]   
+WantedBy=multi-user.target   
 ## linux/arm64 docker运行(官方仓)
 # 采集配置
 #### 登入系统
