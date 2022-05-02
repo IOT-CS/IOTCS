@@ -30,7 +30,25 @@
   官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-linux-x64-binaries   
 2.下载release 版本   
 3.Linux 运行请安装成systemd服务   
-4.安装步骤
+4.安装步骤   
+vim /usr/lib/systemd/system/gatewayd.service   
+[Unit]
+Description=Gateway System Service
+After=network.target   
+
+[Service]
+WorkingDirectory=/gateway/netcore/IOTCS
+Type=simple
+User=root
+Group=root
+ExecStart=/gateway/sdk/dotnet IOTCS.EdgeGateway.Server.dll
+Restart=always
+RestartSec=10
+SyslogIdentifier=dotnet-zl
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+
 ## linux/arm64 docker运行(官方仓)
 # 采集配置
 #### 登入系统
