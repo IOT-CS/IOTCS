@@ -75,4 +75,4 @@ WantedBy=multi-user.target
 * 诊断日志   
 ![image](images/diagnostics.png)
 #### 联系我们
-![image](images/diagnostics.png)
+![image](images/二维码.jpg)
