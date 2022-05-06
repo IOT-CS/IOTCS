@@ -79,4 +79,4 @@ WantedBy=multi-user.target
 #### 联系我们
 * 微信号：Hearteen ``浩瀚星辰`` 
 * 公众号   
-<p align="center">![image](images/二维码.jpg) </p>
+<div align=center>![image](images/二维码.jpg)</div>
