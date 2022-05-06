@@ -77,6 +77,6 @@ WantedBy=multi-user.target
 * 诊断日志   
 ![image](images/diagnostics.png)
 #### 联系我们
-* 微信：Hearteen(浩瀚星辰)
-* 公众号
-![image](images/二维码.jpg)
+* 微信：Hearteen(浩瀚星辰)   
+* 公众号   
+![image](images/二维码.jpg) 
