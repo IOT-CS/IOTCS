@@ -14,8 +14,6 @@
 * 内置Modbus驱动全协议支持（待开发中）  
 
 
-# 免责声明
-# 生产环境使用请做好评估；
 # 体验
 * 在线体验iotcs后台：http://127.0.0.1/    
 ![image](images/1648891279.jpg)
@@ -51,6 +49,8 @@ Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
 
 [Install]   
 WantedBy=multi-user.target   
+# 免责声明
+# 生产环境使用请做好评估；
 ## linux/arm64 docker运行(官方仓)
 # 采集配置
 #### 登入系统
