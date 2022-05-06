@@ -29,7 +29,9 @@
 2.下载release 版本   
 3.Linux 运行请安装成systemd服务   
 4.安装步骤   
+```
 vim /usr/lib/systemd/system/gatewayd.service  
+```
 
 [Unit]   
 Description=Gateway System Service   
