@@ -31,12 +31,10 @@
 4.安装步骤   
 ```
 vim /usr/lib/systemd/system/gatewayd.service  
-```
-```
+
 [Unit]   
 Description=Gateway System Service   
 After=network.target   
-```
 
 [Service]   
 WorkingDirectory=/gateway/netcore/IOTCS   
@@ -52,6 +50,7 @@ Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
 
 [Install]   
 WantedBy=multi-user.target   
+```
 # 免责声明
 # 生产环境使用请做好评估；
 ## linux/arm64 docker运行(官方仓)
