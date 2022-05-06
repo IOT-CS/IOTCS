@@ -79,4 +79,4 @@ WantedBy=multi-user.target
 #### 联系我们
 * 微信号：Hearteen ``浩瀚星辰`` 
 * 公众号   
-<div align=center><img src="https://github.com/IOT-CS/IOTCS/blob/main/images/diagnostics.png" width="180" height="105"> width="180" height="105"/></div>
+![image](images/二维码.png)
