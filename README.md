@@ -21,7 +21,12 @@
 ## windows主机运行：
 * 下载windows运行环境：安装.net core3.1   
   *   官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-windows-x64-binaries   
+  *   安装运行环境：
+  *   将安装好的bin目录加入到windows PATH环境变量里
+  *   验证是否安装成功,dotnet --info  
 * 下载release 版本   
+  *   将压缩包解压到指定的位置
+  *   进入到App目录后，执行如下命令:dotent IOTCS.EdgeGateway.Server.dll 或者执行 IOTCS.EdgeGateway.Server.exe 
 * windows 运行请在生产环境中安装成windows服务
 ## Linux主机运行：
 * 下载Linux运行环境：安装.net core3.1   
