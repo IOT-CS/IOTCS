@@ -36,7 +36,7 @@
   tar -zxvf aspnetcore-runtime-3.1.24-linux-x64.tar.gz -C /opt/netcoresdk/
   ln -s /opt/netcoresdk/ /usr/local/bin
   ```
-  验证是否安装成功：dotnet --info
+  *   验证是否安装成功：dotnet --info
 * 下载release 版本   
 * Linux 运行请安装成systemd服务   
 * 安装步骤   
