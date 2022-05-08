@@ -23,7 +23,7 @@
   *   官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-windows-x64-binaries   
   *   安装运行环境：
   *   将安装好的bin目录加入到windows PATH环境变量里
-  *   验证是否安装成功,dotnet --info  
+  *   验证是否安装成功：dotnet --info  
 * 下载release 版本   
   *   将压缩包解压到指定的位置
   *   进入到App目录后，执行如下命令:dotent IOTCS.EdgeGateway.Server.dll 或者执行 IOTCS.EdgeGateway.Server.exe 
@@ -33,6 +33,8 @@
   *   官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-linux-x64-binaries
   *   安装运行环境
   *      tar -zxvf aspnetcore-runtime-3.1.24-linux-x64.tar.gz -C /opt/netcoresdk/
+  *      ln -s /opt/netcoresdk/ /usr/local/bin
+  *      验证是否安装成功：dotnet --info
 * 下载release 版本   
 * Linux 运行请安装成systemd服务   
 * 安装步骤   
