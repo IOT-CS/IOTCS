@@ -1,5 +1,6 @@
 # IOTCS
 ## github地址：https://github.com/IOT-CS/IOTCS/
+## gitee地址：https://gitee.com/wittqueen/IOTCS/
 工业智能网关
 基于.net core的跨平台物联网网关。是一款具备挖掘工业设备数据并接入到自主开发的云平台网络设备。支持采集西门子PLC、三菱PLC、欧姆龙PLC、各种Modbus协议设备的数据。支持MQTT、HTTP以及自定义开发，提供简单的驱动开发接口。  
 ### 功能介绍：
