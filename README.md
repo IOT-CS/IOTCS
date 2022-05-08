@@ -30,7 +30,9 @@
 * windows 运行请在生产环境中安装成windows服务
 ## Linux主机运行：
 * 下载Linux运行环境：安装.net core3.1   
-  *   官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-linux-x64-binaries   
+  *   官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-linux-x64-binaries
+  *   安装运行环境
+  *      tar -zxvf aspnetcore-runtime-3.1.24-linux-x64.tar.gz -C /opt/netcoresdk/
 * 下载release 版本   
 * Linux 运行请安装成systemd服务   
 * 安装步骤   
