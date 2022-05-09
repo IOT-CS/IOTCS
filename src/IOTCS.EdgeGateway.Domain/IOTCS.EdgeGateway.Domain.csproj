@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Freesql.Helper\IOTCS.EdgeGateway.Freesql.Helper.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Freesql\IOTCS.EdgeGateway.Freesql.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ValueObject\Notification\" />
+  </ItemGroup>
+
+</Project>

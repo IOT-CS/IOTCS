@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DynamicExpresso.Core" Version="2.12.0" />
+    <PackageReference Include="IOTCS.EdgeGateway.DotNetty" Version="1.0.1" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Commands\IOTCS.EdgeGateway.Commands.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Core\IOTCS.EdgeGateway.Core.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Diagnostics\IOTCS.EdgeGateway.Diagnostics.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Dispatch\IOTCS.EdgeGateway.Dispatch.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Logging\IOTCS.EdgeGateway.Logging.csproj" />
+  </ItemGroup>
+
+</Project>

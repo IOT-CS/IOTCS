@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="3.1.3" />
+	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Autofac" Version="3.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Infrastructure\IOTCS.EdgeGateway.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="iotcs.db">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

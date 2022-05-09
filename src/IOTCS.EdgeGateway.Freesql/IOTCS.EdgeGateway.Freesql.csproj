@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Core" Version="3.3.2" />
+  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FreeSql" Version="2.3.200" />
+		<PackageReference Include="FreeSql.DbContext" Version="2.3.200" />
+		<PackageReference Include="FreeSql.Extensions.Linq" Version="2.3.200" />
+		<PackageReference Include="FreeSql.Provider.Custom" Version="2.3.200" />
+		<PackageReference Include="FreeSql.Provider.MySql" Version="2.3.200" />
+		<PackageReference Include="FreeSql.Provider.Oracle" Version="2.3.200" />
+		<PackageReference Include="FreeSql.Provider.PostgreSQL" Version="2.3.200" />
+		<PackageReference Include="FreeSql.Provider.Sqlite" Version="2.3.200" />
+		<PackageReference Include="FreeSql.Provider.SqlServer" Version="2.3.200" />
+		<PackageReference Include="FreeSql.Repository" Version="2.3.200" />
+	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="IdleBus" Version="1.5.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Logging\IOTCS.EdgeGateway.Logging.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IdleBus\" />
+  </ItemGroup>
+
+</Project>

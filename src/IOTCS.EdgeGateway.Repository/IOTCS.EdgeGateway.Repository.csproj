@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IOTCS.EdgeGateway.CmdHandler\IOTCS.EdgeGateway.CmdHandler.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Core\IOTCS.EdgeGateway.Core.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Domain\IOTCS.EdgeGateway.Domain.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Freesql.Helper\IOTCS.EdgeGateway.Freesql.Helper.csproj" />
+  </ItemGroup>
+
+</Project>
