@@ -66,7 +66,6 @@ WantedBy=multi-user.target
 ```
 # 免责声明
 # 生产环境使用请做好评估；
-## linux/arm64 docker运行(官方仓)
 # 采集配置
 #### 登入系统
 * 用户名 admin,密码 000000  
