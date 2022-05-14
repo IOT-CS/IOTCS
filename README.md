@@ -38,7 +38,9 @@
   ln -s /opt/netcoresdk/ /usr/local/bin
   ```
   *   验证是否安装成功：dotnet --info
-* 下载release 版本   
+* 下载release 版本  
+  *   将压缩包解压到指定的位置
+  *   然后，进入到App目录后，执行如下命令:dotent IOTCS.EdgeGateway.Server.dll  
 * Linux 运行请安装成systemd服务   
 * 安装步骤   
 ```
