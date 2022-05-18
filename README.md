@@ -68,7 +68,18 @@ WantedBy=multi-user.target
 ```
 # 免责声明
 ### 生产环境使用请做好评估,本项目只提供技术共享，若遇到生产问题与本项目组织无关；
+## linux/amd64 docker运行(官方仓)
+```
+docker pull iotcs/igateway:latest
+
+docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotcs/igateway:latest
+```
 ## linux/arm64 docker运行(官方仓)
+```
+docker pull iotcs/igateway:arm
+
+docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotcs/igateway:arm
+```
 # 采集配置
 #### 登入系统
 * 用户名 admin,密码 1111  
