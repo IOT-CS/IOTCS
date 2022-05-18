@@ -65,10 +65,11 @@ Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
 WantedBy=multi-user.target   
 ```
 # 免责声明
-# 生产环境使用请做好评估；
+# 生产环境使用请做好评估,本项目只提供技术共享，若遇到生产问题与本项目组织无关；
+# 在线使用教程：http://47.108.190.157:8080/index.html
 # 采集配置
 #### 登入系统
-* 用户名 admin,密码 000000  
+* 用户名 admin,密码 1111  
 ![image](images/1648884682.jpg)
 #### 驱动管理
 * 驱动配置  
