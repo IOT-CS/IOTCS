@@ -1,5 +1,5 @@
 # IOTCS
-## gitee地址：https://gitee.com/wittqueen/IOTCS/
+# Gitee地址：https://gitee.com/wittqueen/IOTCS/
 * 在线体验iotcs后台：http://47.108.190.157/ 
 * 在线教程文档地址：http://47.108.190.157:8080/index.html
 
@@ -19,7 +19,7 @@
 # 体验
 ![image](images/1648891279.jpg)
 # 安装运行条件
-## windows主机运行：
+## Windows主机运行：
 * 下载windows运行环境：安装.net core3.1   
   *   官方下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/thank-you/runtime-aspnetcore-3.1.24-windows-x64-binaries   
   *   安装运行环境：
@@ -69,9 +69,9 @@ WantedBy=multi-user.target
 ### 生产环境使用请做好评估,本项目只提供技术共享，若遇到生产问题与本项目组织无关；
 ## linux/amd64 docker运行(官方仓)
 ```
-docker pull iotcs/igateway:latest
+docker pull iotcs/igateway:0.6
 
-docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotcs/igateway:latest
+docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotcs/igateway:0.6
 ```
 ## linux/arm64 docker运行(官方仓)
 ```
@@ -80,7 +80,7 @@ docker pull iotcs/igateway:arm
 docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotcs/igateway:arm
 ```
 # 采集配置
-#### 登入系统
+#### 登入系统   
 * 用户名 admin,密码 1111  
 ![image](images/1648884682.jpg)
 #### 驱动管理
