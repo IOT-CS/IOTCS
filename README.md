@@ -3,7 +3,7 @@
 * 在线体验iotcs后台：http://47.108.190.157/ 
 * 在线教程文档地址：http://47.108.190.157:8080/index.html
 
-工业智能网关，基于.net core的跨平台物联网网关。是一款具备采集工业设备数据并接入到自主开发的云平台。支持不同设备驱动(PLC、CNC、数据库、串口设备、上位机、OPC UA、MQTT）具备二次开发驱动的能力实现与Thingsboard进行数据通讯。同时支持多资源配置化管理，MQTT、MYSQL、WEBHOOK等多种类型，实现数据的快速推送，提供简单的驱动开发接口。  
+工业智能网关，基于.net core3.1的跨平台物联网网关。是一款具备采集工业设备数据并接入到自主开发的云平台。支持不同设备驱动(PLC、CNC、数据库、串口设备、上位机、OPC UA、MQTT）具备二次开发驱动的能力实现与Thingsboard进行数据通讯。同时支持多资源配置化管理，MQTT、MYSQL、WEBHOOK等多种类型，实现数据的快速推送，提供简单的驱动开发接口。  
 ### 功能介绍：
 * 内置Mqtt服务端,支持websocket,进行标准mqtt输出
 * 可视化的配置方式实现数据采集
@@ -66,7 +66,7 @@ Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
 WantedBy=multi-user.target   
 ```
 # 免责声明
-### 生产环境使用请做好评估,本项目只提供技术共享，若遇到生产问题与本项目组织无关；
+### 生产环境使用请做好评估,如使用OPCUA协议请联系OPC基金会进行授权，若遇到生产纠纷一概与本项目组织无关；
 ## linux/amd64 docker运行(官方仓)
 ```
 docker pull iotcs/igateway:0.6
