@@ -66,7 +66,8 @@ Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
 WantedBy=multi-user.target   
 ```
 # 免责声明
-### 生产环境使用请做好评估,如使用OPCUA协议请联系OPC基金会进行授权，若遇到生产纠纷一概与本项目组织无关；
+### 生产环境使用请做好评估   
+### 如使用OPCUA协议请联系OPC基金会进行授权，若遇到生产纠纷一概与本项目组织无关；
 ## linux/amd64 docker运行(官方仓)
 ```
 docker pull iotcs/igateway:0.6
