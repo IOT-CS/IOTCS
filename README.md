@@ -3,12 +3,12 @@
 * 在线体验iotcs后台：http://47.108.190.157/ 
 * 在线教程文档地址：http://47.108.190.157:8080/index.html
 
-工业智能网关，基于.net core3.1的跨平台物联网网关。是一款具备采集工业设备数据并接入到自主开发的云平台。支持不同设备驱动(PLC、CNC、数据库、串口设备、上位机、OPC UA、MQTT）具备二次开发驱动的能力实现与Thingsboard进行数据通讯。同时支持多资源配置化管理，MQTT、MYSQL、WEBHOOK等多种类型，实现数据的快速推送，提供简单的驱动开发接口。  
-### 功能介绍：
+工业智能网关，基于.net core3.1的跨平台物联网网关。是一款具备采集工业设备数据并接入到自主开发的云平台。支持不同设备驱动(PLC、数据库、串口设备、上位机、OPC UA、MQTT）具备二次开发驱动的能力实现与Thingsboard进行数据通讯。同时支持多资源配置化管理，MQTT、MYSQL、WEBHOOK等多种类型，实现数据的快速推送，提供简单的驱动接口开发。  
+### 主要亮点：
 * 内置Mqtt服务端,支持websocket,进行标准mqtt输出
-* 可视化的配置方式实现数据采集
-* 支持工业现场的多种工业设备协议，完备的协议库使更多的设备可以轻松接入
-* 内置OPCUA客户端驱动
+* 可视化的驱动设备配置实现数据采集
+* 支持工业现场的多种设备协议
+* 内置OPCUA驱动协议
 * 内置西门子PLC驱动(待开发中)
 * 内置欧姆龙PLC驱动（待开发中）
 * 内置三菱PLC驱动（待开发中）
@@ -16,7 +16,7 @@
 * 内置Modbus驱动全协议支持（待开发中）  
 
 
-# 体验
+# 安装部署
 ![image](images/1648891279.jpg)
 # 安装运行条件
 ## Windows主机运行：
@@ -65,22 +65,21 @@ Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
 [Install]   
 WantedBy=multi-user.target   
 ```
-# 免责声明
-### 生产环境使用请做好评估   
-### 如使用OPCUA协议请联系OPC基金会进行授权，若遇到生产纠纷一概与本项目组织无关；
-## linux/amd64 docker运行(官方仓)
+# 责任说明
+### 实际生产环境中使用请做好风险预测   
+## linux/amd64 docker运行
 ```
 docker pull iotcs/igateway:0.6
 
 docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotcs/igateway:0.6
 ```
-## linux/arm64 docker运行(官方仓)
+## linux/arm64 docker运行
 ```
 docker pull iotcs/igateway:arm
 
 docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotcs/igateway:arm
 ```
-# 采集配置
+# 功能说明
 #### 登入系统   
 * 用户名 admin,密码 1111  
 ![image](images/1648884682.jpg)
