@@ -39,4 +39,5 @@ RUN dotnet publish "IOTCS.EdgeGateway.Server.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+COPY IOTCS.EdgeGateway.Server/iotcs.db .
 ENTRYPOINT ["dotnet", "IOTCS.EdgeGateway.Server.dll"]
