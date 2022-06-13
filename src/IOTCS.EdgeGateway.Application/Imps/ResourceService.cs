@@ -87,7 +87,7 @@ namespace IOTCS.EdgeGateway.Application.Imps
 
                 result = true;
             }
-            catch (Exception e)
+            catch
             {
                 result = false;
             }

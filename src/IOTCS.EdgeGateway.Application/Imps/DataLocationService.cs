@@ -39,7 +39,6 @@ namespace IOTCS.EdgeGateway.Application.Imps
 
         public async Task<IEnumerable<DataLocationDto>> GetNodeByIdAsync(string id)
         {
-            var result = new List<DataLocationDto>();
             var model = await _repository.GetNodeByIdAsync(id).ConfigureAwait(false);
             var node = from s in model
                        select s.ToModel<DataLocationModel, DataLocationDto>();
@@ -47,25 +46,18 @@ namespace IOTCS.EdgeGateway.Application.Imps
             if (_keyValues.ContainsKey(id))
             {
                 var notify = _keyValues[id];
-                DataLocationDto dataLocation = null;
                 foreach (var locaton in notify.Nodes)
                 {
-                    dataLocation = node.Where(w => w.Id == locaton.Id).FirstOrDefault();
+                    var dataLocation = node.Where(w => w.Id == locaton.Id).FirstOrDefault();
                     if (dataLocation != null)
                     {
                         dataLocation.Source = locaton.Source;
                         dataLocation.Sink = locaton.Sink;
                         dataLocation.Status = locaton.Status;
-
-                        result.Add(dataLocation);
                     }
                 }
             }
-            else
-            {
-                return node;
-            }
-            return result;
+            return node;
         }
 
         public async Task<bool> Insert(DataLocationDto data)

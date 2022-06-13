@@ -36,7 +36,7 @@ namespace IOTCS.EdgeGateway.ResDriver
             var config = JsonConvert.DeserializeObject<dynamic>(configData);
             _contextOptions = new MqttContextOptions() 
             {
-                ClientId = "test_mqtt",
+                ClientId = "mqtt" + Guid.NewGuid().ToString("N"),
                 IpAddress = config.MQTTIp,
                 Port = Convert.ToInt32(config.MQTTPort),
                 UserId = config.MQTTUid,

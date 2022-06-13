@@ -33,7 +33,7 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
         private IConcurrentList<DeviceConfigDto> _deviceConfig = null;
         private ConcurrentDictionary<string, NotifyChangeDto> _keyValues = null;
         private ConcurrentDictionary<string, IntPtr> _dbConnectors = null;
-        private ConcurrentDictionary<string, IResourceDriver> _resourceDriver = null;
+        private ConcurrentDictionary<string, IResourceDriver> _resourceDriver = null;        
         private readonly IDeviceService _deviceService;
         private readonly IDriveService _driveService;
         private readonly IRelationshipService _relationshipService;
@@ -70,9 +70,7 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
             _logger.Info(msg);
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            try
-            {
-                Parallel.Invoke(
+            Parallel.Invoke(
                     async () => { await GetDriverAsync(); },
                     async () => { await GetDevicesAsync(); },
                     async () => { await GetDeviceConfigAsync(); },
@@ -80,13 +78,6 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
                     async () => { await GetLocationsAsync(); },
                     async () => { await GetRelationShipAsync(); }
                     );
-            }
-            catch (Exception e)
-            {
-                var eMsg = $"初始化OPC UA 配置数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
-                _logger.Error(eMsg);
-                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
-            }
             watch.Stop();
             long useTime = watch.ElapsedMilliseconds;
             msg = $"配置数据初始化结束, 用时=>{(useTime / 1000.0)}秒!";
@@ -101,14 +92,24 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
         {
             var result = true;
 
-            var retDataLocations = await _dataLocationService.GetAsync().ConfigureAwait(false);
-            if (retDataLocations != null && retDataLocations.Count() > 0)
+            try
             {
-                _dataLocations.Clear();
-                foreach (var location in retDataLocations)
+                var retDataLocations = await _dataLocationService.GetAsync().ConfigureAwait(false);
+                if (retDataLocations != null && retDataLocations.Count() > 0)
                 {
-                    _dataLocations.Add(location);
+                    _dataLocations.Clear();
+                    foreach (var location in retDataLocations)
+                    {
+                        _dataLocations.Add(location);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                result = false;
+                var eMsg = $"初始化Locations数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
+                _logger.Error(eMsg);
+                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
             }
 
             return result;
@@ -122,14 +123,24 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
         {
             var result = true;
 
-            var devices = await _deviceService.GetAsync().ConfigureAwait(false);
-            if (devices != null && devices.Count() > 0)
+            try
             {
-                _device.Clear();
-                foreach (var device in devices)
+                var devices = await _deviceService.GetAsync().ConfigureAwait(false);
+                if (devices != null && devices.Count() > 0)
                 {
-                    _device.Add(device);
+                    _device.Clear();
+                    foreach (var device in devices)
+                    {
+                        _device.Add(device);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                result = false;
+                var eMsg = $"初始化Device数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
+                _logger.Error(eMsg);
+                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
             }
 
             return result;
@@ -143,14 +154,24 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
         {
             var result = true;
 
-            var deviceConfig = await _deviceConfigService.GetAsync().ConfigureAwait(false);
-            if (deviceConfig != null && deviceConfig.Count() > 0)
+            try
             {
-                _deviceConfig.Clear();
-                foreach (var conf in deviceConfig)
+                var deviceConfig = await _deviceConfigService.GetAsync().ConfigureAwait(false);
+                if (deviceConfig != null && deviceConfig.Count() > 0)
                 {
-                    _deviceConfig.Add(conf);
+                    _deviceConfig.Clear();
+                    foreach (var conf in deviceConfig)
+                    {
+                        _deviceConfig.Add(conf);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                result = false;
+                var eMsg = $"初始化DriverConfig数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
+                _logger.Error(eMsg);
+                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
             }
 
             return result;
@@ -160,15 +181,25 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
         {
             var result = true;
 
-            var driver = await _driveService.GetAllrive().ConfigureAwait(false);
-            if (driver != null && driver.Count() > 0)
+            try
             {
-                _driver.Clear();
-                foreach (var d in driver)
+                var driver = await _driveService.GetAllrive().ConfigureAwait(false);
+                if (driver != null && driver.Count() > 0)
                 {
-                    _driver.Add(d);
+                    _driver.Clear();
+                    foreach (var d in driver)
+                    {
+                        _driver.Add(d);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                result = false;
+                var eMsg = $"初始化Driver数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
+                _logger.Error(eMsg);
+                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
+            }            
 
             return result;
         }
@@ -177,29 +208,39 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
         {
             var result = true;
 
-            var resources = await _resourceService.GetAsync().ConfigureAwait(false);
-            if (resources != null && resources.Count() > 0)
+            try
             {
                 _keyValues.Clear();
-                _resources.Clear();
-                foreach (var r in resources)
-                {
-                    _resources.Add(r);
-                    switch (r.ResourceType.ToLower())
+                var resources = await _resourceService.GetAsync().ConfigureAwait(false);
+                if (resources != null && resources.Count() > 0)
+                {                    
+                    _resources.Clear();
+                    foreach (var r in resources)
                     {
-                        case "mqtt":
-                            var mqttDriver = new MqttDriver();
-                            mqttDriver.Initialize(r.ResourceParams);
-                            _resourceDriver.TryAdd(r.Id, mqttDriver);
-                            break;
-                        case "webhook":
-                            var httpDriver = new HttpDriver();
-                            httpDriver.Initialize(r.ResourceParams);
-                            _resourceDriver.TryAdd(r.Id, httpDriver);
-                            break;
+                        _resources.Add(r);
+                        switch (r.ResourceType.ToLower())
+                        {
+                            case "mqtt":
+                                var mqttDriver = new MqttDriver();
+                                mqttDriver.Initialize(r.ResourceParams);
+                                _resourceDriver.TryAdd(r.Id, mqttDriver);
+                                break;
+                            case "webhook":
+                                var httpDriver = new HttpDriver();
+                                httpDriver.Initialize(r.ResourceParams);
+                                _resourceDriver.TryAdd(r.Id, httpDriver);
+                                break;
+                        }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                result = false;
+                var eMsg = $"初始化Resource数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
+                _logger.Error(eMsg);
+                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
+            }            
 
             return result;
         }
@@ -208,15 +249,25 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
         {
             var result = true;
 
-            var relationShip = await _relationshipService.GetAllRelationship().ConfigureAwait(false);
-            if (relationShip != null && relationShip.Count() > 0)
+            try
             {
-                _relationships.Clear();
-                foreach (var r in relationShip)
+                var relationShip = await _relationshipService.GetAllRelationship().ConfigureAwait(false);
+                if (relationShip != null && relationShip.Count() > 0)
                 {
-                    _relationships.Add(r);
+                    _relationships.Clear();
+                    foreach (var r in relationShip)
+                    {
+                        _relationships.Add(r);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                result = false;
+                var eMsg = $"初始化RelationShip数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
+                _logger.Error(eMsg);
+                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
+            }            
 
             return result;
         }

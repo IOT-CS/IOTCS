@@ -28,7 +28,7 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddFullLogging(Configuration);
             services.AddCors(options =>
@@ -37,11 +37,12 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi
                    Configuration["Application:CorsOrigins"]
                    .Split(",", StringSplitOptions.RemoveEmptyEntries).ToArray()
                ).SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods(new string[] { "POST", "OPTIONS" })
-               .AllowAnyHeader()             
+               .AllowAnyHeader()
                )
             );
             services.AddControllers()
-                .AddNewtonsoftJson(options => {
+                .AddNewtonsoftJson(options =>
+                {
                     // 忽略循环引用
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     // 不使用驼峰
@@ -54,7 +55,7 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi
                 options.EnableEndpointRouting = false;
                 options.Filters.Add<HttpGlobalExceptionFilter>();
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            
+
             services.Configure<Settings>(Configuration.GetSection("Jwt"));
             var Settings = new Settings();
             Configuration.Bind("Jwt", Settings);
@@ -77,7 +78,7 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Settings.SecurityKey))
                 };
             });
-            
+
             services.AddApiDoc();
             _services = services;
         }

@@ -34,6 +34,7 @@ namespace IOTCS.EdgeGateway.Plugins.Monitor
             _webSocket = IocManager.Instance.GetService<IWebSocketServer>();
             _equipments = IocManager.Instance.GetService<ConcurrentDictionary<string, IDriver>>();
             _device = IocManager.Instance.GetService<IConcurrentList<DeviceDto>>();
+            _diagnostics = IocManager.Instance.GetService<ISystemDiagnostics>();
             _deviceConfig = IocManager.Instance.GetService<IConcurrentList<DeviceConfigDto>>();
             _logger = IocManager.Instance.GetService<ILoggerFactory>().CreateLogger("Monitor");
         }

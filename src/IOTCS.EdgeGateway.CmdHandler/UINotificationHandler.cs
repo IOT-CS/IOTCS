@@ -59,6 +59,7 @@ namespace IOTCS.EdgeGateway.CmdHandler
             {
                 NotifyChangeDto notify = _keyValues[deviceID];
                 NotifyChangeVariableDto location = null;
+                Interpreter interpreter = new Interpreter();
                 foreach (var node in nodes)
                 {
                     location = notify.Nodes.Where(w => w.NodeAddress == node.NodeId).FirstOrDefault();
@@ -67,6 +68,8 @@ namespace IOTCS.EdgeGateway.CmdHandler
                         var sinkValue = "0";
                         if (!string.IsNullOrEmpty(location.Expressions))
                         {
+                            var resultFunc = interpreter.ParseAsDelegate<Func<dynamic, double>>(location.Expressions, "raw");
+                            //sinkValue = resultFunc(Convert.ToDouble(node.NodeValue));
                             //var result = target.Eval(location.Expressions, new[] { new Parameter("raw", Convert.ToDouble(notify.Source)) });
                             //sinkValue = result.ToString();
                         }

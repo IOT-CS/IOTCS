@@ -46,7 +46,7 @@ namespace IOTCS.EdgeGateway.Repository
         public async Task<bool> Update(DataLocationModel model)
         {
             var currRow = await _freeSql.Select<DataLocationModel>()
-             .Where(d => d.ParentId.Equals(model.ParentId) && d.DisplayName.Equals(model.DisplayName))
+             .Where(d => d.ParentId.Equals(model.ParentId) && d.NodeAddress.Equals(model.NodeAddress))
              .ToListAsync().ConfigureAwait(false);
             if (currRow != null && currRow.Count > 0)
             {

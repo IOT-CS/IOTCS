@@ -63,10 +63,7 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
                 {
                     try
                     {
-                        if (_system.IsPublishing)
-                        {
-                            ReloadConfig();
-                        }
+                        ReloadConfig();
                     }
                     catch (Exception e)
                     {
@@ -85,8 +82,10 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
         {
             if (_system.IsPublishing)
             {
+                _logger.Error($"配置数据重新加载开始");
                 _initialize.Executing();
                 _system.IsPublishing = false;
+                _logger.Error($"配置数据重新加载结束");
             }
         }
 
@@ -223,6 +222,7 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
                 keyValues.Add("GroupName", group.DeviceName);
                 keyValues.Add("Topic", device.Topic);
                 keyValues.Add("DeviceID", deviceID);
+                keyValues.Add("Ts", DateTime.Now.ToString());
                 foreach (var e in list)  
                 {
                     keyValues.Add(e.FieldName, e.NodeValue);

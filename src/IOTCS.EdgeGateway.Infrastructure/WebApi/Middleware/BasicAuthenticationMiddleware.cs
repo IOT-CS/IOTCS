@@ -52,27 +52,23 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi.Middleware
                         }
                         else
                         {
-                            context.Response.StatusCode = 401;
+                            _logger.Error($"身份验证失败！当前token=>{authentication}");
                             result.Successful = false;
-                            result.ErrorMessage = "401 Unauthozied";
-                            await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+                            result.ErrorMessage = "401 Unauthozied";                            
                         }
                     }
                     catch(Exception ex)
                     {
-                        _logger.Error($"身份验证失败！");
-                        context.Response.StatusCode = 401;
+                        _logger.Error($"身份验证失败！当前token=>{authentication}, Msg=>{ex.Message},Stack=>{ex.StackTrace}");                       
                         result.Successful = false;
-                        result.ErrorMessage = "401 Unauthozied";
-                        await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+                        result.ErrorMessage = "401 Unauthozied";                        
                     }
                 }
                 else
                 {
-                    context.Response.StatusCode = 401;
+                    _logger.Error($"身份验证失败！当前token=>{authentication}");
                     result.Successful = false;
-                    result.ErrorMessage = "401 Unauthozied,请登录后，再调试！";
-                    await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+                    result.ErrorMessage = "401 Unauthozied,请登录后，再调试！";                    
                 }
             }
 
