@@ -71,25 +71,33 @@ namespace IOTCS.EdgeGateway.Application.Imps
         public async Task<bool> TestAsync(ResourceDto data)
         {
             var result = true;
+            var rResult = string.Empty;
             var model = data.ToModel<ResourceDto, ResourceModel>();
 
-            try
+            switch (model.ResourceType.ToLower())
             {
-                switch (model.ResourceType.ToLower())
-                {
-                    case "mqtt":
-                        _mqttDriver.Initialize(model.ResourceParams);
-                        break;
-                    case "webhook":
-                        _httpDriver.Initialize(model.ResourceParams);
-                        break;
-                }
-
-                result = true;
-            }
-            catch
-            {
-                result = false;
+                case "mqtt":
+                    rResult = _mqttDriver.CheckConnected(model.ResourceParams);
+                    if (string.IsNullOrEmpty(rResult))
+                    {
+                        result = true;
+                    }
+                    else
+                    {
+                        result = false;
+                    }
+                    break;
+                case "webhook":
+                    rResult = _httpDriver.CheckConnected(model.ResourceParams);
+                    if (string.IsNullOrEmpty(rResult))
+                    {
+                        result = true;
+                    }
+                    else
+                    {
+                        result = false;
+                    }
+                    break;
             }
 
             return await Task.FromResult<bool>(result);

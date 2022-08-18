@@ -1,5 +1,6 @@
 ﻿using IOTCS.EdgeGateway.Application;
 using IOTCS.EdgeGateway.Core;
+using IOTCS.EdgeGateway.Core.Security;
 using IOTCS.EdgeGateway.Domain.ValueObject;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi.Controller
         [HttpPost]
         [Route("edge/login")]
         public ActionResult<RestfulData<LoginDto>> Login([FromBody] LoginDto user)
-        {           
+        {
             var result = new RestfulData<LoginDto>();
 
             if (user == null || string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.Password))

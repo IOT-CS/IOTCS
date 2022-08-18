@@ -26,9 +26,6 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-
-            await _next.Invoke(context);
-
             string authentication = context.Request.Headers["XC-Token"];
             var result = new DataResponseDto<string>();
             var path = context.Request.Path.HasValue != true
@@ -54,21 +51,24 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi.Middleware
                         {
                             _logger.Error($"身份验证失败！当前token=>{authentication}");
                             result.Successful = false;
-                            result.ErrorMessage = "401 Unauthozied";                            
+                            result.ErrorMessage = "身份验证失败,请重新登录！";
+                            await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
                         }
                     }
                     catch(Exception ex)
                     {
                         _logger.Error($"身份验证失败！当前token=>{authentication}, Msg=>{ex.Message},Stack=>{ex.StackTrace}");                       
                         result.Successful = false;
-                        result.ErrorMessage = "401 Unauthozied";                        
+                        result.ErrorMessage = "身份验证失败,请重新登录！";
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
                     }
                 }
                 else
                 {
                     _logger.Error($"身份验证失败！当前token=>{authentication}");
                     result.Successful = false;
-                    result.ErrorMessage = "401 Unauthozied,请登录后，再调试！";                    
+                    result.ErrorMessage = "身份验证失败,请重新登录！";
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
                 }
             }
 

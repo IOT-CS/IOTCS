@@ -1,35 +1,38 @@
 ﻿using IOTCS.EdgeGateway.Application;
 using IOTCS.EdgeGateway.CmdHandler;
 using IOTCS.EdgeGateway.Diagnostics.DiagnosticsContext;
-using IOTCS.EdgeGateway.Dispatch;
 using IOTCS.EdgeGateway.Infrastructure.Extensions;
 using IOTCS.EdgeGateway.Infrastructure.Serialize;
-using IOTCS.EdgeGateway.Infrastructure.Socket;
 using IOTCS.EdgeGateway.Infrastructure.WebApi.Middleware;
 using IOTCS.EdgeGateway.MqttHandler;
 using IOTCS.EdgeGateway.Plugins;
+using IOTCS.EdgeGateway.ProcPipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using Volo.Abp;
 using Volo.Abp.Modularity;
+using IOTCS.EdgeGateway.WsHandler;
+using IOTCS.EdgeGateway.WebSocketManager;
 
 namespace IOTCS.EdgeGateway.Infrastructure.WebApi
 {
     [DependsOn(
         typeof(AppJsonModule),
         typeof(OpcHandlerModule),
-        typeof(AbpDiagnosticsContextModule),
-        typeof(AbpWebSocketModule),
+        typeof(AbpDiagnosticsContextModule),        
         typeof(AppServicesModule),
         typeof(AppPluginModule),
-        typeof(AppDispatchModule),
+        typeof(AppPipelineModule),
         typeof(AppMqttHandlerModule)
         )]
     public class ApplicationMvcModule : AbpModule
     {
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
+            var serviceProvider = context.ServiceProvider;
             var app = context.GetApplicationBuilder();
             var env = context.GetEnvironment();
 
@@ -41,6 +44,11 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            app.UseWebSockets(new WebSocketOptions {
+                KeepAliveInterval = TimeSpan.FromDays(30)
+            });
+            app.MapWebSocketManager("/ws", serviceProvider.GetService<WsMessageHandler>());
             app.UseCors("CorsPolicy");
             app.UseMiddleware<BasicAuthenticationMiddleware>();
             app.UseAuthentication();
@@ -49,7 +57,7 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi
             {
                 mvcOptions.MapRoute(name: "default",
                                     template: "{controller=Login}/{action=Post}");
-            });
-        }
+            });            
+        }       
     }
 }

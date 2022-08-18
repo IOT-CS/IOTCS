@@ -56,7 +56,7 @@ namespace IOTCS.EdgeGateway.Plugins.OpcUADriver
                     {
                         var msg = $"OPC UA 连接失败！失败的OPC URL => {url}，没有找到对应的设备配置信息。";
                         _logger.Error(msg);
-                        _diagnostics.PublishDiagnosticsInfoAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
+                        _diagnostics.PublishDiagnosticsInfo(msg);
                     }
                 }
             }
@@ -65,7 +65,7 @@ namespace IOTCS.EdgeGateway.Plugins.OpcUADriver
                 result = false;
                 var msg = $"OPC UA 连接失败！失败的OPC URL => {url}，信息 => {e.Message},位置 => {e.StackTrace}";
                 _logger.Error(msg);
-                _diagnostics.PublishDiagnosticsInfoAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
+                _diagnostics.PublishDiagnosticsInfo(msg);
             }
 
             return result;
@@ -80,13 +80,13 @@ namespace IOTCS.EdgeGateway.Plugins.OpcUADriver
             return result;
         }
 
-        public string Run(string deviceID)
+        public string Run(string deviceID, string groupID)
         {
             var result = string.Empty;
 
             if (_opcClient.Connected)
             {
-                var locations = _dataLocations.Where(w => w.ParentId == deviceID);
+                var locations = _dataLocations.Where(w => w.ParentId == groupID);
                 var curLocations = from l in locations
                                    select new NodeId(l.NodeAddress);
                 var curLocationValues = from l in locations

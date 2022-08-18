@@ -31,5 +31,7 @@ namespace IOTCS.EdgeGateway.Domain.Models
         public string UpdateBy { get; set; }
 
         public string UpdateTime { get; set; }
+
+        public string Attribute { get; set; }
     }
 }

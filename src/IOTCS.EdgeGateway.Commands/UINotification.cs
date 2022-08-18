@@ -6,6 +6,8 @@ namespace IOTCS.EdgeGateway.Commands
     {
         public string DeviceID { get; set; }
 
+        public string GroupID { get; set; }
+
         /// <summary>
         /// 主体数据
         /// </summary>

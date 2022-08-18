@@ -5,13 +5,14 @@
 	<DisableImplicitAspNetCoreAnalyzers>true</DisableImplicitAspNetCoreAnalyzers>
   </PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="IOTCS.EdgeGateway.DotNetty" Version="1.0.1" />
+		<PackageReference Include="IOTCS.EdgeGateway.DotNetty" Version="1.0.2" />
 		<PackageReference Include="MediatR" Version="10.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
+		<PackageReference Include="Microsoft.AspNetCore.WebSockets" Version="2.2.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
@@ -27,5 +28,7 @@
 	  <ProjectReference Include="..\IOTCS.EdgeGateway.Freesql\IOTCS.EdgeGateway.Freesql.csproj" />
 	  <ProjectReference Include="..\IOTCS.EdgeGateway.Logging\IOTCS.EdgeGateway.Logging.csproj" />
 	  <ProjectReference Include="..\IOTCS.EdgeGateway.Plugins\IOTCS.EdgeGateway.Plugins.csproj" />
+	  <ProjectReference Include="..\IOTCS.EdgeGateway.ProcPipeline\IOTCS.EdgeGateway.ProcPipeline.csproj" />
+	  <ProjectReference Include="..\IOTCS.EdgeGateway.WsHandler\IOTCS.EdgeGateway.WsHandler.csproj" />
 	</ItemGroup>
 </Project>

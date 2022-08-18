@@ -1,15 +1,24 @@
 ﻿using IOTCS.EdgeGateway.ComResDriver;
+using Microsoft.Extensions.DependencyInjection;
 using RestSharp;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using IOTCS.EdgeGateway.Logging;
+using IOTCS.EdgeGateway.Core;
 
 namespace IOTCS.EdgeGateway.ResDriver
 {
     public class HttpDriver : IHttpDriver, IDisposable
     {
         private RestClient _httpClient;
+        private readonly ILogger _logger;
+
+        public HttpDriver()
+        {
+            _logger = IocManager.Instance.GetService<ILoggerFactory>().CreateLogger("Monitor");
+        }
 
         public dynamic Parameter { get; set; }
 
@@ -17,24 +26,59 @@ namespace IOTCS.EdgeGateway.ResDriver
 
         private Uri HttpUri { get; set; }
 
-        public void Initialize(string config)
+        public string Initialize(string config)
         {
-            this.Parameter = JsonConvert.DeserializeObject<dynamic>(config);
-            this.HttpUri = new Uri(Convert.ToString(Parameter.HTTPUrl));
-            var uriString = HttpUri.Scheme + "://" + HttpUri.Host + ":" + HttpUri.Port;
-            var connectionTimeout = Convert.ToInt32(Parameter.ConnectTimeOut);
-            _httpClient = new RestClient(new RestClientOptions { BaseUrl = new Uri(uriString), Timeout = connectionTimeout });
-            this.HttpMethod = Method.Post;
-            String stringMethod = Parameter.HTTPMethod;
-            switch (stringMethod.ToLower())
+            var result = string.Empty;
+
+            try
             {
-                case "get":
-                    this.HttpMethod = Method.Get;
-                    break;
-                case "post":
-                    this.HttpMethod = Method.Post;
-                    break;
+                this.Parameter = JsonConvert.DeserializeObject<dynamic>(config);
+                this.HttpUri = new Uri(Convert.ToString(Parameter.HTTPUrl));
+                var uriString = HttpUri.Scheme + "://" + HttpUri.Host + ":" + HttpUri.Port;
+                var connectionTimeout = Convert.ToInt32(Parameter.ConnectTimeOut);
+                _httpClient = new RestClient(new RestClientOptions { BaseUrl = new Uri(uriString), Timeout = connectionTimeout });
+                this.HttpMethod = Method.Post;
+                String stringMethod = Parameter.HTTPMethod;
+                switch (stringMethod.ToLower())
+                {
+                    case "get":
+                        this.HttpMethod = Method.Get;
+                        break;
+                    case "post":
+                        this.HttpMethod = Method.Post;
+                        break;
+                }                
             }
+            catch (Exception e)
+            {
+                var msg = $"Http 初始化错误信息 => {e.Message},错误位置 => {e.StackTrace}";
+                result = msg;
+                _logger.Info(msg);
+            }
+
+            return result;
+        }
+
+        public string CheckConnected(string config)
+        {
+            var result = string.Empty;
+
+            try
+            {
+                var parameter = JsonConvert.DeserializeObject<dynamic>(config);
+                var httpUri = new Uri(Convert.ToString(Parameter.HTTPUrl));
+                var uriString = httpUri.Scheme + "://" + httpUri.Host + ":" + httpUri.Port;
+                var connectionTimeout = Convert.ToInt32(parameter.ConnectTimeOut);
+                var httpClient = new RestClient(new RestClientOptions { BaseUrl = new Uri(uriString), Timeout = connectionTimeout });
+            }
+            catch (Exception e)
+            {
+                var msg = $"Http 初始化错误信息 => {e.Message},错误位置 => {e.StackTrace}";
+                result = msg;
+                _logger.Info(msg);
+            }
+
+            return result;
         }
 
         public async Task<bool> Run(dynamic data)

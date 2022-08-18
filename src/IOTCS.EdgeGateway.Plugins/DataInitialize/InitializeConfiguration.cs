@@ -109,7 +109,7 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
                 result = false;
                 var eMsg = $"初始化Locations数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
                 _logger.Error(eMsg);
-                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
+                _diagnostics.PublishDiagnosticsInfo(eMsg);
             }
 
             return result;
@@ -125,7 +125,7 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
 
             try
             {
-                var devices = await _deviceService.GetAsync().ConfigureAwait(false);
+                var devices = await _deviceService.GetAllDevice().ConfigureAwait(false);
                 if (devices != null && devices.Count() > 0)
                 {
                     _device.Clear();
@@ -140,7 +140,7 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
                 result = false;
                 var eMsg = $"初始化Device数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
                 _logger.Error(eMsg);
-                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
+                _diagnostics.PublishDiagnosticsInfo(eMsg);
             }
 
             return result;
@@ -171,7 +171,7 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
                 result = false;
                 var eMsg = $"初始化DriverConfig数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
                 _logger.Error(eMsg);
-                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
+                _diagnostics.PublishDiagnosticsInfo(eMsg);
             }
 
             return result;
@@ -198,7 +198,7 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
                 result = false;
                 var eMsg = $"初始化Driver数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
                 _logger.Error(eMsg);
-                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
+                _diagnostics.PublishDiagnosticsInfo(eMsg);
             }            
 
             return result;
@@ -221,11 +221,19 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
                         switch (r.ResourceType.ToLower())
                         {
                             case "mqtt":
+                                if (_resourceDriver.ContainsKey(r.Id))
+                                {
+                                    _resourceDriver.Remove(r.Id);
+                                }
                                 var mqttDriver = new MqttDriver();
                                 mqttDriver.Initialize(r.ResourceParams);
                                 _resourceDriver.TryAdd(r.Id, mqttDriver);
                                 break;
                             case "webhook":
+                                if (_resourceDriver.ContainsKey(r.Id))
+                                {
+                                    _resourceDriver.Remove(r.Id);
+                                }
                                 var httpDriver = new HttpDriver();
                                 httpDriver.Initialize(r.ResourceParams);
                                 _resourceDriver.TryAdd(r.Id, httpDriver);
@@ -239,7 +247,7 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
                 result = false;
                 var eMsg = $"初始化Resource数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
                 _logger.Error(eMsg);
-                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
+                _diagnostics.PublishDiagnosticsInfo(eMsg);
             }            
 
             return result;
@@ -266,7 +274,7 @@ namespace IOTCS.EdgeGateway.Plugins.DataInitialize
                 result = false;
                 var eMsg = $"初始化RelationShip数据失败! 错误信息=> {e.Message}, 错误位置=>{e.StackTrace}";
                 _logger.Error(eMsg);
-                _diagnostics.PublishDiagnosticsInfoAsync(eMsg).ConfigureAwait(false).GetAwaiter().GetResult();
+                _diagnostics.PublishDiagnosticsInfo(eMsg);
             }            
 
             return result;

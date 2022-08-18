@@ -17,9 +17,11 @@ namespace IOTCS.EdgeGateway.Domain.Repositories
 
         Task<IEnumerable<DeviceModel>> GetDeviceGroup();
 
-        Task<IEnumerable<DeviceDto>> GetAllDevice();
+        Task<IEnumerable<DeviceModel>> GetGroupByDeviceId(string deviceId);
 
         Task<IEnumerable<DeviceModel>> GetAsync();
+
+        Task<string> GetNodeTypeConfigByDriveType(string driveType);
 
     }
 }

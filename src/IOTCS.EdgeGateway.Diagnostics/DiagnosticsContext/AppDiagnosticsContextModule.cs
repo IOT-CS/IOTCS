@@ -8,6 +8,7 @@ namespace IOTCS.EdgeGateway.Diagnostics.DiagnosticsContext
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
             context.Services.Add(ServiceDescriptor.Singleton<ISystemDiagnostics, SystemDiagnostics>());
+            context.Services.Add(ServiceDescriptor.Singleton<IUINotification, UINotification>());
         }
     }
 }

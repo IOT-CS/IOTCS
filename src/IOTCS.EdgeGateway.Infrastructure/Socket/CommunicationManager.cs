@@ -66,6 +66,7 @@ namespace IOTCS.EdgeGateway.Infrastructure.Socket
                             await SendAsync(server, sendMsg);
                             break;
                         case "close":
+                            _logger.Info($"connect closed,protocol.RequestType => {protocol.RequestType}");
                             connection.Close();
                             break;
                         default://广播消息给所有设备

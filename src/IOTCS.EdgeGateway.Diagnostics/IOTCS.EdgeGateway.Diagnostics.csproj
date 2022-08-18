@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Commands\IOTCS.EdgeGateway.Commands.csproj" />
     <ProjectReference Include="..\IOTCS.EdgeGateway.Logging\IOTCS.EdgeGateway.Logging.csproj" />
   </ItemGroup>
 

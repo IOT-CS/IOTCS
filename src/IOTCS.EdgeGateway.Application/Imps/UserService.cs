@@ -1,4 +1,5 @@
-﻿using IOTCS.EdgeGateway.Domain.Models;
+﻿using IOTCS.EdgeGateway.Core.Security;
+using IOTCS.EdgeGateway.Domain.Models;
 using IOTCS.EdgeGateway.Domain.Repositories;
 using IOTCS.EdgeGateway.Domain.ValueObject;
 using IOTCS.EdgeGateway.Freesql.Helper;
@@ -19,10 +20,10 @@ namespace IOTCS.EdgeGateway.Application.Imps
         public UserService(IServiceProvider services
             , ILogger logger
             , IUserRepository repository)
-            
+
         {
             this._logger = logger;
-            this._repository = repository;            
+            this._repository = repository;
         }
 
         public async Task<UserDto> GetUserInfoByName(string userName)
@@ -59,9 +60,11 @@ namespace IOTCS.EdgeGateway.Application.Imps
             var model = data.ToModel<UserDto, UserModel>();
 
             var currUser = await _repository.GetInfoByUserName(model);
-            if (currUser.Password.Equals(data.OldPassword))
+            var oldPwd = MD5Helper.GenerateMd5String(data.OldPassword);
+            if (currUser.Password.Equals(oldPwd))
             {
-                result =  await _repository.UpdatePwd(model);
+                model.Password = MD5Helper.GenerateMd5String(model.Password);
+                result = await _repository.UpdatePwd(model);
             }
 
             return await Task.FromResult<bool>(result);

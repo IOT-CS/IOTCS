@@ -4,8 +4,8 @@ using IOTCS.EdgeGateway.Core;
 using IOTCS.EdgeGateway.Core.Collections;
 using IOTCS.EdgeGateway.Domain.ValueObject;
 using IOTCS.EdgeGateway.Domain.ValueObject.Notification;
-using IOTCS.EdgeGateway.DotNetty;
 using IOTCS.EdgeGateway.Logging;
+using IOTCS.EdgeGateway.WsHandler;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -21,14 +21,14 @@ namespace IOTCS.EdgeGateway.CmdHandler
     public class UINotificationHandler : INotificationHandler<UINotification>
     {
         private readonly ILogger _logger;
-        private readonly IWebSocketServer _webSocket;
+        private readonly WsMessageHandler _webSocket;
         private ConcurrentDictionary<string, NotifyChangeDto> _keyValues;
-        private IConcurrentList<DataLocationDto> _dataLocations = null;
+        private IConcurrentList<DataLocationDto> _dataLocations = null;        
 
         public UINotificationHandler()
         {
             _logger = IocManager.Instance.GetService<ILogger>();
-            _webSocket = IocManager.Instance.GetService<IWebSocketServer>();
+            _webSocket = IocManager.Instance.GetService<WsMessageHandler>();
             _keyValues = IocManager.Instance.GetService<ConcurrentDictionary<string, NotifyChangeDto>>();
             _dataLocations = IocManager.Instance.GetService<IConcurrentList<DataLocationDto>>();
         }
@@ -40,8 +40,8 @@ namespace IOTCS.EdgeGateway.CmdHandler
                 var message = JsonConvert.DeserializeObject<IEnumerable<DataNodeDto>>(notification.UIMessage);
                 if (!string.IsNullOrEmpty(notification.DeviceID))
                 {
-                    SentToUI(message, notification.DeviceID);
-                }                
+                    SentToUI(message, notification.DeviceID, notification.GroupID);
+                }
             }
             catch (Exception e)
             {
@@ -51,13 +51,14 @@ namespace IOTCS.EdgeGateway.CmdHandler
             return Task.CompletedTask;
         }
 
-        private void SentToUI(IEnumerable<DataNodeDto> nodes, string deviceID)
+        private void SentToUI(IEnumerable<DataNodeDto> nodes, string deviceID, string groupID)
         {
             String jsonConvertString = string.Empty;            
 
-            if (_keyValues.ContainsKey(deviceID))
+            if (_keyValues.ContainsKey(groupID))
             {
-                NotifyChangeDto notify = _keyValues[deviceID];
+                double result = 0;
+                NotifyChangeDto notify = _keyValues[groupID];
                 NotifyChangeVariableDto location = null;
                 Interpreter interpreter = new Interpreter();
                 foreach (var node in nodes)
@@ -66,12 +67,42 @@ namespace IOTCS.EdgeGateway.CmdHandler
                     if (location != null)
                     {
                         var sinkValue = "0";
-                        if (!string.IsNullOrEmpty(location.Expressions))
+                        if (!string.IsNullOrEmpty(location.Expressions) && !string.IsNullOrEmpty(node.NodeValue))
                         {
-                            var resultFunc = interpreter.ParseAsDelegate<Func<dynamic, double>>(location.Expressions, "raw");
-                            //sinkValue = resultFunc(Convert.ToDouble(node.NodeValue));
-                            //var result = target.Eval(location.Expressions, new[] { new Parameter("raw", Convert.ToDouble(notify.Source)) });
-                            //sinkValue = result.ToString();
+                            switch (location.NodeType.ToLower())
+                            {
+                                case "uint8":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(byte), Convert.ToSByte(node.NodeValue)));
+                                    break;
+                                case "int8":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(sbyte), Convert.ToByte(node.NodeValue)));
+                                    break;
+                                case "uint16":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(UInt16), Convert.ToUInt16(node.NodeValue)));
+                                    break;
+                                case "int16":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(Int16), Convert.ToInt16(node.NodeValue)));
+                                    break;
+                                case "uint32":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(UInt32), Convert.ToUInt32(node.NodeValue)));
+                                    break;
+                                case "int32":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(Int32), Convert.ToInt32(node.NodeValue)));
+                                    break;
+                                case "uint64":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(UInt64), Convert.ToUInt64(node.NodeValue)));
+                                    break;
+                                case "int64":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(Int64), Convert.ToInt64(node.NodeValue)));
+                                    break;
+                                case "float":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(float), Convert.ToSingle(node.NodeValue)));
+                                    break;
+                                case "double":
+                                    result = interpreter.Eval<double>(location.Expressions.ToString(), new Parameter("raw", typeof(double), Convert.ToDouble(node.NodeValue)));
+                                    break;
+                            }
+                            sinkValue = result.ToString();
                         }
                         else
                         {
@@ -86,17 +117,18 @@ namespace IOTCS.EdgeGateway.CmdHandler
             else
             {
                 var notifys = from d in _dataLocations
-                             where d.ParentId == deviceID
-                             select d.ToModel<DataLocationDto, NotifyChangeVariableDto>();
+                              where d.ParentId == groupID
+                              select d.ToModel<DataLocationDto, NotifyChangeVariableDto>();
                 var notification = new NotifyChangeDto();
                 notification.DeviceID = deviceID;
+                notification.GroupID = groupID;
                 notification.Nodes = new List<NotifyChangeVariableDto>();
                 foreach (var n in notifys)
                 {
                     n.PropertyChanged += N_PropertyChanged;
                     notification.Nodes.Add(n);
                 }
-                _keyValues.TryAdd(deviceID, notification);
+                _keyValues.TryAdd(groupID, notification);
             }
         }
 
@@ -114,49 +146,30 @@ namespace IOTCS.EdgeGateway.CmdHandler
                     Sink = notify.Sink,
                     Status = notify.Status
                 };
-                var JsonString = HandleMessage(monitor);
-                Send(JsonString).ConfigureAwait(false).GetAwaiter().GetResult();
-                _logger.Info($"datanodeId => {notify.Id},data=>{JsonString}");
+                
+                Send(monitor).ConfigureAwait(false).GetAwaiter().GetResult();                
             }
             catch (Exception ex)
             {
                 _logger.Error($"推送设备变量变化值的内容失败，异常信息 => {ex.Message},位置 => {ex.StackTrace},当前点位=>{JsonConvert.SerializeObject(notify)}");
             }
-        }       
+        }
 
-        private async Task Send(string msg)
+        private async Task Send(MonitorVariableValueDto message)
         {
             try
             {
-                var connections = _webSocket?.GetAllConnections();
-                if (connections != null && connections.Count > 0)
+                await _webSocket.SendMessageToAllAsync(new WebSocketManager.Common.Message
                 {
-                    foreach (var conn in connections)
-                    {
-                        await conn.Send(msg);
-
-                    }
-                }
+                    MessageType = WebSocketManager.Common.MessageType.Text,
+                    RequestType = "nodeValue",
+                    Data = message
+                }).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 _logger.Error($"推送点位变量信息到界面上，异常信息 => {e.Message},位置 => {e.StackTrace}");
             }
-        }
-
-        private string HandleMessage(MonitorVariableValueDto message)
-        {
-            var result = string.Empty;
-            var socketObject = new WebSocketProtocol<MonitorVariableValueDto>();
-
-            if (message != null)
-            {
-                socketObject.RequestType = "nodeValue";
-                socketObject.Data = message;
-                result = JsonConvert.SerializeObject(socketObject);
-            }
-
-            return result;
         }
     }
 }

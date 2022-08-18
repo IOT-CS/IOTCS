@@ -4,8 +4,8 @@ namespace IOTCS.EdgeGateway.Diagnostics
 {
     public interface ISystemDiagnostics
     {
-        Task PublishAsync(string message);
+        void Publish(string message);
 
-        Task PublishDiagnosticsInfoAsync(string message);
+        void PublishDiagnosticsInfo(string message);
     }
 }

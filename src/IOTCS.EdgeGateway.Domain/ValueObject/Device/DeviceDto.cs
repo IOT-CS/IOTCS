@@ -29,7 +29,7 @@ namespace IOTCS.EdgeGateway.Domain.ValueObject
         public string ParentId { get; set; }
         public int InUse { get; set; }
 
-        public string Duration { get; set; }
+        public int Duration { get; set; }
         public string Topic { get; set; }
         public List<DeviceDto> Childrens { get; set; }
 

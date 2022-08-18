@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\QuickCollect.Framwork.Core\QuickCollect.Framwork.Core.csproj" />
+	  <ProjectReference Include="..\QuickCollect.Framwork.Freesql.Helper\QuickCollect.Framwork.Freesql.Helper.csproj" />
+	  <ProjectReference Include="..\QuickCollect.Framwork.Freesql\QuickCollect.Framwork.Freesql.csproj" />
+	  <ProjectReference Include="..\QuickCollect.Framwork.IdleBus\QuickCollect.Framwork.IdleBus.csproj" />
+	  <ProjectReference Include="..\QuickCollect.Framwork.TDengineDriver\QuickCollect.Framwork.TDengineDriver.csproj" />
+	  <ProjectReference Include="..\QuickCollect.SCADA.Server.Domain\QuickCollect.SCADA.Server.Domain.csproj" />
+	</ItemGroup>
+
+</Project>

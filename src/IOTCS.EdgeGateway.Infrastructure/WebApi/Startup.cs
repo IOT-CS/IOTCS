@@ -1,5 +1,7 @@
 ﻿using IOTCS.EdgeGateway.Infrastructure.Extensions;
 using IOTCS.EdgeGateway.Infrastructure.Server;
+using IOTCS.EdgeGateway.WebSocketManager;
+using IOTCS.EdgeGateway.WsHandler;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Volo.Abp.DependencyInjection;
 
@@ -29,7 +32,9 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddWebSocketManager(Assembly.GetAssembly(typeof(WsMessageHandler)));
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IConfiguration>(Configuration);            
             services.AddFullLogging(Configuration);
             services.AddCors(options =>
                options.AddPolicy("CorsPolicy", builder =>

@@ -44,7 +44,7 @@ namespace IOTCS.EdgeGateway.Application.Imps
             {
                 userInfo = _service.GetUserInfoByName(name).ConfigureAwait(false).GetAwaiter().GetResult();
                 var enPassword = MD5Helper.GenerateMd5String(password);
-                if (userInfo == null || userInfo.Password != password)
+                if (userInfo == null || userInfo.Password != enPassword)
                 {
                     return null;
                 }

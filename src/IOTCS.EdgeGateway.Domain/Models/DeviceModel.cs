@@ -33,7 +33,7 @@ namespace IOTCS.EdgeGateway.Domain.Models
 
         public string Topic { get; set; }
 
-        public string Duration { get; set; }
+        public int Duration { get; set; }
 
     }
 }

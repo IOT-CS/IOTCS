@@ -24,6 +24,7 @@ namespace IOTCS.EdgeGateway.Application
             context.Services.Add(ServiceDescriptor.Singleton<IDBDataStorageService, DBDataStorageService>());
             context.Services.Add(ServiceDescriptor.Singleton<IRelationshipService, RelationshipService>());
             context.Services.Add(ServiceDescriptor.Singleton<IRelationshipDomainService, RelationshipDomainService>());
+            context.Services.Add(ServiceDescriptor.Singleton<IDeviceDomainService, DeviceDomainService>());
         }
     }
 }

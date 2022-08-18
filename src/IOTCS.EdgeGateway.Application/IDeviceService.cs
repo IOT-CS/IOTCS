@@ -20,5 +20,7 @@ namespace IOTCS.EdgeGateway.Application
         Task<IEnumerable<DeviceDto>> GetAllDevice();
 
         Task<IEnumerable<DeviceDto>> GetAsync();
+
+        Task<string> GetNodeTypeConfigByDevId(string deviceId);
     }
 }

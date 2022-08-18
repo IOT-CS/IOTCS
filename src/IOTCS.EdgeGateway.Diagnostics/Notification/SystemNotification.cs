@@ -7,7 +7,7 @@ namespace IOTCS.EdgeGateway.Diagnostics.Notification
     /// </summary>
     public class SystemNotification : INotification
     {
-        public string Message { get; set; }
+        public dynamic Message { get; set; }
 
         public string MsgType { get; set; } = "";
     }

@@ -12,7 +12,7 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi.Filter
     public class ManageVerifyAttribute : Attribute, IActionFilter
     {
         private readonly ILogger _logger;
-        private readonly RequestDelegate _next;
+        //private readonly RequestDelegate _next;
         private readonly IAuthorizationService _authService;
 
         public ManageVerifyAttribute()

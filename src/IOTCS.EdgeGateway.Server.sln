@@ -31,17 +31,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.Library",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.Plugins", "IOTCS.EdgeGateway.Plugins\IOTCS.EdgeGateway.Plugins.csproj", "{CF1FCEF3-5345-4EF1-B1C8-1F5A1FC5E905}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.Dispatch", "IOTCS.EdgeGateway.Dispatch\IOTCS.EdgeGateway.Dispatch.csproj", "{49B04571-68C0-4639-A2B9-56AF7C261640}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.ComResDriver", "IOTCS.EdgeGateway.ComResDriver\IOTCS.EdgeGateway.ComResDriver.csproj", "{E38E07BF-A503-4EBB-A42B-CC861B935120}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.BaseDriver", "IOTCS.EdgeGateway.BaseDriver\IOTCS.EdgeGateway.BaseDriver.csproj", "{EC333CC3-9B35-49D6-98F6-9E4AA90C581E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.Commands", "IOTCS.EdgeGateway.Commands\IOTCS.EdgeGateway.Commands.csproj", "{BBE8CF1F-7054-403E-B67B-6947F3D9B6A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOTCS.EdgeGateway.ResDriver", "IOTCS.EdgeGateway.ResDriver\IOTCS.EdgeGateway.ResDriver.csproj", "{53D8BA16-967D-4F90-92CA-188F6261AD78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.ResDriver", "IOTCS.EdgeGateway.ResDriver\IOTCS.EdgeGateway.ResDriver.csproj", "{53D8BA16-967D-4F90-92CA-188F6261AD78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOTCS.EdgeGateway.MqttHandler", "IOTCS.EdgeGateway.MqttHandler\IOTCS.EdgeGateway.MqttHandler.csproj", "{6CD624A6-8EDC-4F58-86E2-45DF12A61C2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.MqttHandler", "IOTCS.EdgeGateway.MqttHandler\IOTCS.EdgeGateway.MqttHandler.csproj", "{6CD624A6-8EDC-4F58-86E2-45DF12A61C2E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.ProcPipeline", "IOTCS.EdgeGateway.ProcPipeline\IOTCS.EdgeGateway.ProcPipeline.csproj", "{FC641192-033D-4B7D-8829-433F84C5E4A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.BaseProcPipeline", "IOTCS.EdgeGateway.BaseProcPipeline\IOTCS.EdgeGateway.BaseProcPipeline.csproj", "{36328CE8-6EB2-4546-96B3-AE1AF745B483}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.WebSocketManager", "IOTCS.EdgeGateway.WebSocketManager\IOTCS.EdgeGateway.WebSocketManager.csproj", "{2887C94B-65D5-4507-B952-09322DE83223}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOTCS.EdgeGateway.WsHandler", "IOTCS.EdgeGateway.WsHandler\IOTCS.EdgeGateway.WsHandler.csproj", "{F8AFF047-56A5-405B-9395-0F4D842E471F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,10 +111,6 @@ Global
 		{CF1FCEF3-5345-4EF1-B1C8-1F5A1FC5E905}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF1FCEF3-5345-4EF1-B1C8-1F5A1FC5E905}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF1FCEF3-5345-4EF1-B1C8-1F5A1FC5E905}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49B04571-68C0-4639-A2B9-56AF7C261640}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49B04571-68C0-4639-A2B9-56AF7C261640}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49B04571-68C0-4639-A2B9-56AF7C261640}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49B04571-68C0-4639-A2B9-56AF7C261640}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E38E07BF-A503-4EBB-A42B-CC861B935120}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E38E07BF-A503-4EBB-A42B-CC861B935120}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E38E07BF-A503-4EBB-A42B-CC861B935120}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -129,6 +131,22 @@ Global
 		{6CD624A6-8EDC-4F58-86E2-45DF12A61C2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CD624A6-8EDC-4F58-86E2-45DF12A61C2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CD624A6-8EDC-4F58-86E2-45DF12A61C2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC641192-033D-4B7D-8829-433F84C5E4A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC641192-033D-4B7D-8829-433F84C5E4A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC641192-033D-4B7D-8829-433F84C5E4A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC641192-033D-4B7D-8829-433F84C5E4A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36328CE8-6EB2-4546-96B3-AE1AF745B483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36328CE8-6EB2-4546-96B3-AE1AF745B483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36328CE8-6EB2-4546-96B3-AE1AF745B483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36328CE8-6EB2-4546-96B3-AE1AF745B483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2887C94B-65D5-4507-B952-09322DE83223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2887C94B-65D5-4507-B952-09322DE83223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2887C94B-65D5-4507-B952-09322DE83223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2887C94B-65D5-4507-B952-09322DE83223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8AFF047-56A5-405B-9395-0F4D842E471F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8AFF047-56A5-405B-9395-0F4D842E471F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8AFF047-56A5-405B-9395-0F4D842E471F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8AFF047-56A5-405B-9395-0F4D842E471F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

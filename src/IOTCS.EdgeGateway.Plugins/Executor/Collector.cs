@@ -1,5 +1,5 @@
 ﻿using IOTCS.EdgeGateway.BaseDriver;
-using IOTCS.EdgeGateway.Commands;
+using IOTCS.EdgeGateway.BaseProcPipeline;
 using IOTCS.EdgeGateway.Core;
 using IOTCS.EdgeGateway.Core.Collections;
 using IOTCS.EdgeGateway.Diagnostics;
@@ -7,8 +7,8 @@ using IOTCS.EdgeGateway.Domain.ValueObject;
 using IOTCS.EdgeGateway.Domain.ValueObject.Device;
 using IOTCS.EdgeGateway.Logging;
 using IOTCS.EdgeGateway.Plugins.DataInitialize;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using NetMQ;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -24,7 +24,7 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
     {
         //private int usingResource = 0;
         private SystemManagerDto _system;
-        private IMediator _mediator;
+        private IPipelineContext _actor;
         private readonly IInitializeConfiguration _initialize;
         private readonly ILogger _logger;
         private readonly ISystemDiagnostics _diagnostics;
@@ -37,8 +37,8 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
 
         public Collector()
         {
-            _system = IocManager.Instance.GetService<SystemManagerDto>();
-            _mediator = IocManager.Instance.GetService<IMediator>();
+            _actor = IocManager.Instance.GetService<IPipelineContext>();
+            _system = IocManager.Instance.GetService<SystemManagerDto>();            
             _initialize = IocManager.Instance.GetService<IInitializeConfiguration>();
             _driver = IocManager.Instance.GetService<IConcurrentList<DriveDto>>();
             _device = IocManager.Instance.GetService<IConcurrentList<DeviceDto>>();
@@ -69,7 +69,7 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
                     {
                         var msg = $"重启任务失败！，信息 => {e.Message},位置 => {e.StackTrace}";
                         _logger.Error(msg);
-                        await _diagnostics.PublishDiagnosticsInfoAsync(msg).ConfigureAwait(false);
+                        _diagnostics.PublishDiagnosticsInfo(msg);
                     }
 
                     await Task.Delay(5000);
@@ -91,98 +91,85 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
 
         private void CreateCollectingTasks()
         {
-
-            var groups = _device.Where(w => w.DeviceType == "0");
+            //deviceType = 0 表示设备，deviceType = 1 表示是分组
+            var groups = _device.Where(w => w.DeviceType == "0" && w.InUse == 1);
             _tasks.Clear();
-            foreach (var group in groups)
+            foreach (var device in groups)
             {
-                //var config = _deviceConfig.Where(w => w.DeviceId == deviceID).FirstOrDefault();
-                Task task = new Task(async () => {
-                    while (!_tokenSource.IsCancellationRequested)
-                    {
-                        try
-                        {
-                            if (_system.IsPublishing)
-                            {
-                                var msg = $"正在加载配置数据........!";
-                                _logger.Error(msg);
-                                await _diagnostics.PublishDiagnosticsInfoAsync(msg).ConfigureAwait(false);
-                                await Task.Delay(1000);
-                                continue;
-                            }
-                            var list = _device.Where(w => w.ParentId == group.Id);
-                            CollectingData(list);
+                Task task = new Task(() => {
 
-                            await Task.Delay(1000);
-                        }
-                        catch (Exception e)
+                    try
+                    {
+                        var poller = new NetMQPoller();
+                        var groupList = device.Childrens == null ? new List<DeviceDto>()
+                        : device.Childrens.OrderBy(o => o.Duration).ToList<DeviceDto>();
+                        foreach (var g in groupList)
                         {
-                            var msg = $"任务执行失败！，信息 => {e.Message},位置 => {e.StackTrace}";
-                            _logger.Error(msg);
-                            await _diagnostics.PublishDiagnosticsInfoAsync(msg).ConfigureAwait(false);
+                            _logger.Info($"GroupName => {g.DeviceName},duration => {g.Duration}");
+                            var timer = new NetMQTimer(TimeSpan.FromMilliseconds(g.Duration));
+                            timer.Elapsed += (s, e) => {
+                                if (!_system.IsPublishing)
+                                {
+                                    CollectingData(device.Id, g.Id);
+                                }
+                            };
+                            poller.Add(timer);
                         }
+
+                        poller.Run();
                     }
+                    catch (Exception e)
+                    {
+                        var msg = $"任务执行失败！，信息 => {e.Message},位置 => {e.StackTrace}";
+                        _logger.Error(msg);
+                        _diagnostics.PublishDiagnosticsInfo(msg);
+                    }                   
                 }, _tokenSource.Token, TaskCreationOptions.LongRunning);
                 _tasks.Add(task);
                 task.Start();
             }
-        }
+        }       
 
-        private void CollectingData(IEnumerable<DeviceDto> list)
+        //改造
+        private void CollectingData(string deviceID, string groupID)
         {
-            var cts = new CancellationTokenSource();
-            Parallel.ForEach(list, new ParallelOptions
+            try
             {
-                CancellationToken = cts.Token,
-                MaxDegreeOfParallelism = Environment.ProcessorCount,
-                TaskScheduler = TaskScheduler.Default
-            },
-            async (d, state) =>
-            {
-                try
+                if (_equipments.ContainsKey(deviceID))
                 {
-                    if (_equipments.ContainsKey(d.Id))
+                    var driver = _equipments[deviceID];
+                    var messgae = driver.Run(deviceID, groupID);
+                    if (!string.IsNullOrEmpty(messgae))
                     {
-                        var driver = _equipments[d.Id];
-                        var messgae = driver.Run(d.Id);
-                        if (!string.IsNullOrEmpty(messgae))
-                        {
-                            var sendingMsg = BuildingJsonObject(messgae, d.Id);
-                            //发送订阅数据到界面
-                            var subString = sendingMsg.Payload.Values.FirstOrDefault() == null
-                            ? string.Empty : JsonConvert.SerializeObject(sendingMsg.Payload.Values.FirstOrDefault());
-                            await _diagnostics.PublishAsync(subString).ConfigureAwait(false);
-                            await _mediator.Publish<UINotification>(new UINotification { UIMessage = messgae, DeviceID = d.Id }).ConfigureAwait(false);
-                            //每一个OPC,PLC设备数据单独发走
-                            await _mediator.Publish<OpcUaNotification>(new OpcUaNotification { Message = JsonConvert.SerializeObject(sendingMsg) }).ConfigureAwait(false);
-                        }
-                        else 
-                        {
-                            var msg = $"当前驱动采集数据为空。驱动ID号=>{d.Id}, 设备类型 => {d.DeviceType}!";
-                            _logger.Error(msg);
-                            await _diagnostics.PublishDiagnosticsInfoAsync(msg).ConfigureAwait(false);
-                        }
-                      
+                        var sendingMsg = BuildingJsonObject(messgae, deviceID, groupID);           
+                        _actor.SendPayload(new RouterMessage { Message = sendingMsg, OriginMessage = messgae });                                        
                     }
                     else
                     {
-                        var msg = $"当前采集设备没有匹配到驱动。驱动ID号=>{d.Id}, 设备类型 => {d.DeviceType}!";
+                        var msg = $"当前驱动采集数据为空。驱动ID号=>{deviceID}!";
                         _logger.Error(msg);
-                        await _diagnostics.PublishDiagnosticsInfoAsync(msg).ConfigureAwait(false);
+                        _diagnostics.PublishDiagnosticsInfo(msg);
                     }
                 }
-                catch (Exception e)
+                else
                 {
-                    var msg = $"当前设备数据采集失败！，信息 => {e.Message},位置 => {e.StackTrace}";
+                    var msg = $"当前采集设备没有匹配到驱动。驱动ID号=>{deviceID}!";
                     _logger.Error(msg);
-                    await _diagnostics.PublishDiagnosticsInfoAsync(msg).ConfigureAwait(false);
+                    _diagnostics.PublishDiagnosticsInfo(msg);
                 }
-            });
+            }
+            catch (Exception e)
+            {
+                var msg = $"当前设备数据采集失败！，信息 => {e.Message},位置 => {e.StackTrace}";
+                _logger.Error(msg);
+                _diagnostics.PublishDiagnosticsInfo(msg);
+            }
         }
 
         private void LoadDriver()
         {
-            var equipments = _device.Where(w => w.DeviceType == "1" && w.InUse == 1);
+            //deviceType = 0 表示设备，deviceType = 1 表示是分组
+            var equipments = _device.Where(w => w.DeviceType == "0" && w.InUse == 1);
 
             foreach (var e in equipments)
             {
@@ -196,52 +183,61 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
                             opcua.Connect(e.Id);
                             _equipments.TryAdd(e.Id, opcua);
                             break;
+                        case "modbus-tcp":
+                            var modbus_tcp = new ModbusDriver.ModbusTcpDriver();
+                            modbus_tcp.Connect(e.Id);
+                            _equipments.TryAdd(e.Id, modbus_tcp);
+                            break;
+                        case "siemens-s7-1200":
+                            var siemens_s7_1200 = new SiemensDriver.SiemensS71200NetDriver();
+                            siemens_s7_1200.Connect(e.Id);
+                            _equipments.TryAdd(e.Id, siemens_s7_1200);
+                            break;
+                        case "siemens-s7-1500":
+                            var siemens_s7_1500 = new SiemensDriver.SiemensS71500NetDriver();
+                            siemens_s7_1500.Connect(e.Id);
+                            _equipments.TryAdd(e.Id, siemens_s7_1500);
+                            break;
                     }
                 }
                 else
                 {
                     var msg = $"当前驱动不存在，驱动ID号=>{e.DriveId}";
                     _logger.Info(msg);
-                    _diagnostics.PublishDiagnosticsInfoAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
+                    _diagnostics.PublishDiagnosticsInfo(msg);
                 }
             }
         }
 
-        private SendMessageDto BuildingJsonObject(string data, string deviceID)
+        private string BuildingJsonObject(string data, string deviceID, string groupID)
         {
+            //var output = string.Empty;
             var result = string.Empty;
-            SendMessageDto payload = null;
             var retResult = new List<dynamic>();
             IEnumerable<DataNodeDto> list = JsonConvert.DeserializeObject<IEnumerable<DataNodeDto>>(data);
             Dictionary<string, string> keyValues = new Dictionary<string, string>();
             try
-            {
+            {  
                 var device = _device.Where(w => w.Id == deviceID).FirstOrDefault();
-                var group = _device.Where(w => w.Id == device.ParentId).FirstOrDefault();
+                var group = device.Childrens.Where(w => w.Id == groupID).FirstOrDefault();
                 keyValues.Clear();
                 keyValues.Add("GroupName", group.DeviceName);
-                keyValues.Add("Topic", device.Topic);
+                keyValues.Add("Topic", group.Topic);
                 keyValues.Add("DeviceID", deviceID);
-                keyValues.Add("Ts", DateTime.Now.ToString());
+                keyValues.Add("GroupID", groupID);
+                keyValues.Add("Timestamp", DateTime.Now.ToString());
                 foreach (var e in list)  
                 {
                     keyValues.Add(e.FieldName, e.NodeValue);
                 }
                 result = JsonConvert.SerializeObject(keyValues);
-                retResult.Add(JsonConvert.DeserializeObject<dynamic>(result));
-
-                var message = new PayloadMessage
-                {
-                    Values = retResult
-                };
-                payload = new SendMessageDto { Payload = message };
             }
             catch (Exception ex)
             {
                 _logger.Error($"ExecutorTask => 解析成JSON数据报错=> 位置 => {ex.Message},异常 => {ex.StackTrace}");
             }
 
-            return payload;
+            return result;
         }
     }
 }

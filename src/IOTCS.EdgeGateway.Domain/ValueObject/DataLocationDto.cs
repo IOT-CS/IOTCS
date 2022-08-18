@@ -30,6 +30,8 @@ namespace IOTCS.EdgeGateway.Domain.ValueObject
 
         public string UpdateTime { get; set; }
 
+        public string Attribute { get; set; }
+
         public string Source { get; set; }
 
         public string Sink { get; set; }

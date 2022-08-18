@@ -15,12 +15,15 @@ namespace IOTCS.EdgeGateway.Application.Imps
     {
         private readonly ILogger _logger;
         private readonly IDeviceConfigRepository _repository;
+        private readonly IDriveRepository _driveRepository;
 
         public DeviceConfigService(ILogger logger,
-                                   IDeviceConfigRepository deviceRepository)
+                                   IDeviceConfigRepository deviceRepository,
+                                   IDriveRepository driveRepository)
         {
             _logger = logger;
             _repository = deviceRepository;
+            _driveRepository = driveRepository;
         }
 
         public async Task<bool> Create(DeviceConfigDto configDto)
@@ -37,9 +40,13 @@ namespace IOTCS.EdgeGateway.Application.Imps
         {
             var result = await _repository.GetAllDeviceConfigByDeviceId(deviceId);
 
-            if (result != null) 
+            var driveInfo = await _driveRepository.GetDriveByDeviceId(deviceId);
+
+            if (result != null && driveInfo != null)
             {
-                return result.ToModel<DeviceConfigModel, DeviceConfigDto>();
+                var dto = result.ToModel<DeviceConfigModel, DeviceConfigDto>();
+                dto.DriveType = driveInfo.DriveType;
+                return dto;
             }
             return null;
         }

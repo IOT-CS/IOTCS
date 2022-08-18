@@ -16,7 +16,7 @@ namespace IOTCS.EdgeGateway.MqttHandler
         {
             var token = new CancellationToken();
             var mqttClient = new MqttFactory().CreateMqttClient();
-            if (options.IsUsingUser == 0)
+            if (string.IsNullOrEmpty(options.UserId))
             {
                 var connector = await mqttClient.ConnectAsync(new MqttClientOptionsBuilder()
                 .WithTcpServer(options.IpAddress, options.Port)

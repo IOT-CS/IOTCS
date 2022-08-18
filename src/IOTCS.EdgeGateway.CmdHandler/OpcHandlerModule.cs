@@ -7,7 +7,7 @@ namespace IOTCS.EdgeGateway.CmdHandler
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddMediatR(new[] { typeof(OpcUaNotificationHandler), typeof(UINotificationHandler), typeof(SystemNotificationHandler) });
+            context.Services.AddMediatR(new[] { typeof(UINotificationHandler), typeof(SystemNotificationHandler) });
         }
     }
 }

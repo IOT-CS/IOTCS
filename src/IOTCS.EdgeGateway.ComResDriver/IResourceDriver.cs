@@ -9,7 +9,9 @@ namespace IOTCS.EdgeGateway.ComResDriver
     {
         dynamic Parameter { get; set; }
 
-        void Initialize(string config);
+        string Initialize(string config);
+
+        string CheckConnected(string config);
 
         bool IsConnected();
 

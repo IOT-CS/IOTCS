@@ -16,5 +16,8 @@ namespace IOTCS.EdgeGateway.Domain.Repositories
         Task<bool> Update(DriveModel deviceModel);
 
         Task<bool> Delete(DriveModel deviceModel);
+        Task<DriveModel> GetDriveByDeviceId(string deviceId);
+
+        Task<DriveModel> GetDriveByGroupId(string groupId);
     }
 }

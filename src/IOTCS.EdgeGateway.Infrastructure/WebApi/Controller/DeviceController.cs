@@ -115,5 +115,15 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi.Controller
         }
 
 
+        [HttpGet]
+        [Route("device/data/getDriveNodeType")]
+        public async Task<DataResponseDto<string>> GetDriveNodeType(string deviceId)
+        {
+            var result = new DataResponseDto<string>();
+            var nodeTypeJson = await _service.GetNodeTypeConfigByDevId(deviceId);
+            result.Successful = true;
+            result.Data = nodeTypeJson;
+            return result;
+        }
     }
 }

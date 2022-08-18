@@ -48,7 +48,7 @@ namespace IOTCS.EdgeGateway.Repository
             var currRow = await _freeSql.Select<DataLocationModel>()
              .Where(d => d.ParentId.Equals(model.ParentId) && d.NodeAddress.Equals(model.NodeAddress))
              .ToListAsync().ConfigureAwait(false);
-            if (currRow != null && currRow.Count > 0)
+            if (currRow != null && currRow.Count > 1)
             {
                 return false;
             }

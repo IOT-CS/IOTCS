@@ -26,7 +26,7 @@ namespace IOTCS.EdgeGateway.Repository
             if (deviceModel.DeviceType == "0")
             {
                 currRow = await _freeSql.Select<DeviceModel>()
-                .Where(d => d.DeviceType.Equals("0") &&  d.DeviceName.Equals(deviceModel.DeviceName))
+                .Where(d => d.DeviceType.Equals("0") && d.DeviceName.Equals(deviceModel.DeviceName))
                 .ToListAsync().ConfigureAwait(false);
             }
             else
@@ -111,7 +111,7 @@ namespace IOTCS.EdgeGateway.Repository
                         _freeSql.Delete<DeviceConfigModel>().Where(d => d.DeviceId == deviceModel.Id).ExecuteAffrows();
                         _freeSql.Delete<DataLocationModel>().Where(d => d.ParentId == deviceModel.Id).ExecuteAffrows();
                     }
-                       
+
                     result = affrows > 0 ? true : false;
 
                 }
@@ -133,65 +133,31 @@ namespace IOTCS.EdgeGateway.Repository
             return result;
         }
 
-        public async Task<IEnumerable<DeviceDto>> GetAllDevice()
+        public async Task<IEnumerable<DeviceModel>> GetGroupByDeviceId(string deviceId)
         {
-            List<DeviceDto> result = new List<DeviceDto>();
+            List<DeviceModel> result = new List<DeviceModel>();
             //设备组
-            var deviceGroup = await _freeSql.Select<DeviceModel>().Where(d => d.ParentId == "" || d.ParentId == null).ToListAsync().ConfigureAwait(false);
-
+            var deviceGroup = await _freeSql.Select<DeviceModel>().Where(d => d.ParentId == deviceId).ToListAsync().ConfigureAwait(false);
             if (deviceGroup != null)
-            {
-                foreach (var group in deviceGroup)
-                {
-                    var deviceGroupDto = group.ToModel<DeviceModel, DeviceDto>();
-                    //设备
-                    // var devices = await _freeSql.Select<DeviceModel>().Where(d => d.ParentId == deviceGroupDto.Id).ToListAsync().ConfigureAwait(false);
-
-                    var devices = await _freeSql.Select<DeviceModel, DriveModel>()
-                      .LeftJoin((a, b) => a.DriveId.Equals(b.Id))
-                      .Where((a, b) => a.ParentId == deviceGroupDto.Id)
-                      .ToListAsync((dto, b) => new { dto, b.DriveName }).ConfigureAwait(false);
-
-                    if (devices != null)
-                    {
-                        var devicesDto = from d in devices
-                                         select new DeviceDto
-                                         {
-                                             Id = d.dto.Id,
-                                             DeviceName = d.dto.DeviceName,
-                                             Description = d.dto.Description,
-                                             DriveId = d.dto.DriveId,
-                                             DeviceType = d.dto.DeviceType,
-                                             CreaterBy = d.dto.CreaterBy,
-                                             CreateTime = d.dto.CreateTime,
-                                             UpdateBy = d.dto.UpdateBy,
-                                             UpdateTime = d.dto.UpdateTime,
-                                             ParentId = d.dto.ParentId,
-                                             Topic = d.dto.Topic,
-                                             DriveName = d.DriveName,
-                                             InUse = d.dto.InUse
-                                         };
-                        deviceGroupDto.Childrens = new List<DeviceDto>();
-                        deviceGroupDto.Childrens.AddRange(devicesDto);
-                        // deviceGroupDto.HasChildren = true;
-                    }
-                    //  else
-                    //deviceGroupDto.HasChildren = false;
-                    result.Add(deviceGroupDto);
-                }
-            }
-
+                result.AddRange(deviceGroup);
             return result;
         }
 
         public async Task<IEnumerable<DeviceModel>> GetDeviceGroup()
         {
             List<DeviceModel> result = new List<DeviceModel>();
-            var affrows = await _freeSql.Select<DeviceModel>().Where(d => d.ParentId == "" || d.ParentId == null).ToListAsync().ConfigureAwait(false);
+            var affrows = await _freeSql.Select<DeviceModel>().Where(d => d.DeviceType == "0").ToListAsync().ConfigureAwait(false);
             if (affrows != null)
                 result.AddRange(affrows);
             return result;
         }
 
+        public async Task<string> GetNodeTypeConfigByDriveType(string driveType)
+        {
+            var result = await _freeSql.Select<NodeTypeConfigModel>().Where(d => d.DriveType.Equals(driveType)).ToListAsync().ConfigureAwait(false);
+            if (result != null && result.Count > 0)
+                return result.FirstOrDefault().NodeTypeJson;
+            return string.Empty;
+        }
     }
 }

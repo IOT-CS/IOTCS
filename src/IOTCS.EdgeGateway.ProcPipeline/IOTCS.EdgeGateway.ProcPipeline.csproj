@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NetMQ" Version="4.0.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IOTCS.EdgeGateway.BaseProcPipeline\IOTCS.EdgeGateway.BaseProcPipeline.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.ComResDriver\IOTCS.EdgeGateway.ComResDriver.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Core\IOTCS.EdgeGateway.Core.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Diagnostics\IOTCS.EdgeGateway.Diagnostics.csproj" />
+    <ProjectReference Include="..\IOTCS.EdgeGateway.Domain\IOTCS.EdgeGateway.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

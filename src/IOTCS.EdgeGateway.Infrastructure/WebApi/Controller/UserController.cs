@@ -1,5 +1,6 @@
 ﻿using IOTCS.EdgeGateway.Application;
 using IOTCS.EdgeGateway.Core;
+using IOTCS.EdgeGateway.Core.Security;
 using IOTCS.EdgeGateway.Domain.ValueObject;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,7 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi.Controller
                     //创建信息
                     userDto.CreateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     userDto.Creator = JsonConvert.DeserializeObject<UserDto>(user).DisplayName;
+                    userDto.Password = MD5Helper.GenerateMd5String(userDto.Password);
                     var rResult = await _service.Insert(userDto);
                     result.Successful = rResult;
                     result.ErrorMessage = rResult ? "" : "创建失败,请检查类型及是否重复!";

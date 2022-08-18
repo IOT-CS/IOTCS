@@ -1,7 +1,6 @@
 ﻿using IOTCS.EdgeGateway.Diagnostics.Notification;
 using IOTCS.EdgeGateway.Logging;
 using MediatR;
-using System.Threading.Tasks;
 
 namespace IOTCS.EdgeGateway.Diagnostics
 {
@@ -21,14 +20,14 @@ namespace IOTCS.EdgeGateway.Diagnostics
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task PublishAsync(string message)
+        public void Publish(string message)
         {
             var command = new SystemNotification
             {
                 Message = message,
                 MsgType = "subLog"
             };
-            await _mediator.Publish<SystemNotification>(command);
+            _mediator.Publish<SystemNotification>(command).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -36,14 +35,14 @@ namespace IOTCS.EdgeGateway.Diagnostics
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task PublishDiagnosticsInfoAsync(string message)
+        public void PublishDiagnosticsInfo(string message)
         {
             var command = new SystemNotification 
             {
                 Message = message,
                 MsgType = "diagnostics"
             };
-            await _mediator.Publish<SystemNotification>(command);            
+            _mediator.Publish<SystemNotification>(command).ConfigureAwait(false).GetAwaiter().GetResult();            
         }
     }
 }

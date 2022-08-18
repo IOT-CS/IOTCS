@@ -9,6 +9,8 @@ namespace IOTCS.EdgeGateway.Domain.ValueObject.Notification
     {
         public string DeviceID { get; set; } = string.Empty;
 
+        public string GroupID { get; set; } = string.Empty;
+
         /// <summary>
         /// 键值对
         /// </summary>
