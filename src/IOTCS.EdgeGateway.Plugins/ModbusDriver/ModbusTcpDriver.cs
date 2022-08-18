@@ -91,14 +91,7 @@ namespace IOTCS.EdgeGateway.Plugins.ModbusDriver
             {
                 List<DataNodeDto> list = new List<DataNodeDto>();
                 var locations = _dataLocations.Where(w => w.ParentId == groupID);
-                var cts = new CancellationTokenSource();
-                Parallel.ForEach(locations, new ParallelOptions
-                {
-                    CancellationToken = cts.Token,
-                    MaxDegreeOfParallelism = Environment.ProcessorCount,
-                    TaskScheduler = TaskScheduler.Default
-                },
-                (d, state) =>
+                foreach (var d in locations)
                 {
                     byte station = 1;
                     string address = string.Empty;
@@ -114,7 +107,7 @@ namespace IOTCS.EdgeGateway.Plugins.ModbusDriver
                         case "string":
                             _busTcpClient.Station = station;
                             var sResult = _busTcpClient.ReadString(address, Convert.ToUInt16(d.NodeLength));
-                            DataNodeDto stringNode = new DataNodeDto 
+                            DataNodeDto stringNode = new DataNodeDto
                             {
                                 FieldName = d.DisplayName,
                                 NodeId = d.NodeAddress,
@@ -196,7 +189,7 @@ namespace IOTCS.EdgeGateway.Plugins.ModbusDriver
                             list.Add(floatNode);
                             break;
                     }
-                });
+                }
 
                 result = JsonConvert.SerializeObject(list);
                 list.Clear();

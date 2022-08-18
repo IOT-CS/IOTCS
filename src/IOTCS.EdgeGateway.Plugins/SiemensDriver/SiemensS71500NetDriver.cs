@@ -90,16 +90,8 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
             {
                 List<DataNodeDto> list = new List<DataNodeDto>();
                 var locations = _dataLocations.Where(w => w.ParentId == deviceID);
-                var cts = new CancellationTokenSource();
-                Parallel.ForEach(locations, new ParallelOptions
+                foreach (var d in locations)
                 {
-                    CancellationToken = cts.Token,
-                    MaxDegreeOfParallelism = Environment.ProcessorCount,
-                    TaskScheduler = TaskScheduler.Default
-                },
-                (d, state) =>
-                {
-                    //并行读取所有数据
                     switch (d.NodeType)
                     {
                         case "string":
@@ -180,7 +172,7 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                             list.Add(floatNode);
                             break;
                     }
-                });
+                }
 
                 result = JsonConvert.SerializeObject(list);
                 list.Clear();
