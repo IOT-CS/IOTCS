@@ -75,12 +75,6 @@ docker pull iotcs/igateway:0.6
 
 docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotcs/igateway:0.6
 ```
-## linux/arm64 docker运行
-```
-docker pull iotcs/igateway:arm
-
-docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotcs/igateway:arm
-```
 # 功能说明
 #### 登入系统   
 * 用户名 admin,密码 1111  
