@@ -19,7 +19,7 @@
 
 
 # 安装部署
-![image](images/shouye.png)
+![image](images/shouye.jpg)
 # 安装运行条件
 ## Windows主机运行：
 * 下载windows运行环境：安装.net core3.1   
@@ -87,7 +87,7 @@ docker run --restart always --name iigateway -dit -p 8001:8001 -p 9001:9001 iotc
 * 设备组的统一管理，设备通过父级ID关联设备组
 * 设备参数配置  
 * 设备变量配置  
-![image](images/shebei.png)
+![image](images/shebei.jpg)
 ![image](images/datalocation.jpg)
 #### 规则管理
 * 规则列表
