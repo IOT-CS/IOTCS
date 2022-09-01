@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
@@ -40,6 +41,7 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
             var host = string.Empty;
             var port = 0;
             var timeout = 0;
+            byte slot = 0;
 
             try
             {
@@ -49,11 +51,11 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                     if (config != null && !string.IsNullOrEmpty(config.ConfigJson))
                     {
                         var djson = JsonConvert.DeserializeObject<dynamic>(config.ConfigJson);
-                        host = djson.Host;
-                        port = Convert.ToInt32(djson.Port);
-                        timeout = Convert.ToInt32(djson.Timeout);
-
-                        _siemensS7NetClient = new SiemensS7Net(SiemensPLCS.S1500, host) { Port = port, Slot = djson.slot, ConnectTimeOut = timeout };
+                        host = djson.IPAddress;
+                        port = Convert.ToInt32(djson.Port.Value);
+                        timeout = Convert.ToInt32(djson.TimeOut.Value);
+                        slot = Convert.ToByte(djson.SLOT);
+                        _siemensS7NetClient = new SiemensS7Net(SiemensPLCS.S1500, host) { Port = port, Slot = slot, ConnectTimeOut = timeout };
                         _siemensS7NetClient.ConnectServer();
 
                         result = true;
@@ -79,6 +81,7 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
 
         public bool IsAviable()
         {
+            if (_siemensS7NetClient == null) return false;
             return string.IsNullOrEmpty(_siemensS7NetClient.ConnectionId) != true ? true : false;
         }
 
@@ -89,10 +92,10 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
             if (IsAviable())
             {
                 List<DataNodeDto> list = new List<DataNodeDto>();
-                var locations = _dataLocations.Where(w => w.ParentId == deviceID);
+                var locations = _dataLocations.Where(w => w.ParentId == groupID);
                 foreach (var d in locations)
                 {
-                    switch (d.NodeType)
+                    switch (d.NodeType.ToLower())
                     {
                         case "string":
                             var sResult = _siemensS7NetClient.ReadString(d.NodeAddress, Convert.ToUInt16(d.NodeLength));
@@ -106,7 +109,7 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                             list.Add(stringNode);
                             break;
                         case "bit":
-                            var bitResult = _siemensS7NetClient.ReadBool(d.NodeAddress, Convert.ToUInt16(d.NodeLength));
+                            var bitResult = _siemensS7NetClient.ReadBool(d.NodeAddress);
                             DataNodeDto bitNode = new DataNodeDto
                             {
                                 FieldName = d.DisplayName,
@@ -117,7 +120,7 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                             list.Add(bitNode);
                             break;
                         case "int16":
-                            var int16Result = _siemensS7NetClient.ReadInt16(d.NodeAddress, Convert.ToUInt16(d.NodeLength));
+                            var int16Result = _siemensS7NetClient.ReadInt16(d.NodeAddress);                            
                             DataNodeDto int16Node = new DataNodeDto
                             {
                                 FieldName = d.DisplayName,
@@ -128,7 +131,7 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                             list.Add(int16Node);
                             break;
                         case "uint16":
-                            var uint16Result = _siemensS7NetClient.ReadUInt16(d.NodeAddress, Convert.ToUInt16(d.NodeLength));
+                            var uint16Result = _siemensS7NetClient.ReadUInt16(d.NodeAddress);
                             DataNodeDto uint16Node = new DataNodeDto
                             {
                                 FieldName = d.DisplayName,
@@ -139,7 +142,7 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                             list.Add(uint16Node);
                             break;
                         case "int32":
-                            var int32Result = _siemensS7NetClient.ReadInt32(d.NodeAddress, Convert.ToUInt16(d.NodeLength));
+                            var int32Result = _siemensS7NetClient.ReadInt32(d.NodeAddress);
                             DataNodeDto int32Node = new DataNodeDto
                             {
                                 FieldName = d.DisplayName,
@@ -150,7 +153,7 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                             list.Add(int32Node);
                             break;
                         case "uint32":
-                            var uint32Result = _siemensS7NetClient.ReadUInt32(d.NodeAddress, Convert.ToUInt16(d.NodeLength));
+                            var uint32Result = _siemensS7NetClient.ReadUInt32(d.NodeAddress);
                             DataNodeDto uint32Node = new DataNodeDto
                             {
                                 FieldName = d.DisplayName,
@@ -161,7 +164,7 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                             list.Add(uint32Node);
                             break;
                         case "float":
-                            var floatResult = _siemensS7NetClient.ReadFloat(d.NodeAddress, Convert.ToUInt16(d.NodeLength));
+                            var floatResult = _siemensS7NetClient.ReadFloat(d.NodeAddress);
                             DataNodeDto floatNode = new DataNodeDto
                             {
                                 FieldName = d.DisplayName,

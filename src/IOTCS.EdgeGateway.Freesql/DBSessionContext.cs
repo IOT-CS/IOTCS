@@ -66,8 +66,12 @@ namespace IOTCS.EdgeGateway.Freesql
                     break;
                 case "5"://SQLite
                     dbType = DataType.Sqlite;
-                    string iotcsPath = AppDomain.CurrentDomain.BaseDirectory + "iotcs.db";
-                    connectionStrings = $"Data Source={iotcsPath}";
+                    string dbPath = string.Empty;
+                    if (options.Debug)
+                        dbPath = System.IO.Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName + "\\Database\\iotcs.db";
+                    else
+                        dbPath = System.IO.Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory) + "\\Database\\iotcs.db";
+                    connectionStrings = $"Data Source={dbPath}";
                     break;
                 default:
                     break;

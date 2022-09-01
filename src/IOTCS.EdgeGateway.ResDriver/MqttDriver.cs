@@ -40,7 +40,7 @@ namespace IOTCS.EdgeGateway.ResDriver
                 var config = JsonConvert.DeserializeObject<dynamic>(configData);
                 _contextOptions = new MqttContextOptions()
                 {
-                    ClientId = "mqtt" + Guid.NewGuid().ToString("N"),
+                    ClientId = "mqtt_" + Guid.NewGuid().ToString("N"),
                     IpAddress = config.MQTTIp,
                     Port = Convert.ToInt32(config.MQTTPort),
                     UserId = config.MQTTUid,
@@ -93,7 +93,7 @@ namespace IOTCS.EdgeGateway.ResDriver
                 var config = JsonConvert.DeserializeObject<dynamic>(configData);
                 var contextOptions = new MqttContextOptions()
                 {
-                    ClientId = "mqtt" + Guid.NewGuid().ToString("N"),
+                    ClientId = "mqtt_" + Guid.NewGuid().ToString("N"),
                     IpAddress = config.MQTTIp,
                     Port = Convert.ToInt32(config.MQTTPort),
                     UserId = config.MQTTUid,
@@ -130,7 +130,7 @@ namespace IOTCS.EdgeGateway.ResDriver
 
             try
             {
-                if (_mqttClient.IsConnected)
+                if (IsConnected())
                 {
                     var dataString = JsonConvert.SerializeObject(data);
                     var response = await _mqttClient.PublishAsync(new MqttApplicationMessage()

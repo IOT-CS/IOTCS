@@ -32,7 +32,7 @@ namespace IOTCS.EdgeGateway.Repository
             else
             {
                 currRow = await _freeSql.Select<DeviceModel>()
-                .Where(d => d.ParentId.Equals(deviceModel.ParentId) && (d.DeviceName.Equals(deviceModel.DeviceName) || d.Topic.Equals(deviceModel.Topic)))
+                .Where(d => d.DeviceType.Equals("1") && (d.DeviceName.Equals(deviceModel.DeviceName) || d.Topic.Equals(deviceModel.Topic)))
                 .ToListAsync().ConfigureAwait(false);
             }
 

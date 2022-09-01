@@ -17,8 +17,8 @@
     <None Update="appSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="iotcs.db">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    <None Update="Database\iotcs.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

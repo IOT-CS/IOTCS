@@ -34,7 +34,7 @@ namespace IOTCS.EdgeGateway.Infrastructure.WebApi.Controller
                 deviceDto.CreaterBy = JsonConvert.DeserializeObject<UserDto>(user).DisplayName;
                 var rResult = await _service.Create(deviceDto);
                 result.Successful = rResult;
-                result.ErrorMessage = rResult ? "" : "创建失败,请检查类型及是否重复!";
+                result.ErrorMessage = rResult ? "" : "创建失败,请检查设备名称及其它参数是否重复!";
             }
             else
             {

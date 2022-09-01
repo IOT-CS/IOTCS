@@ -101,7 +101,7 @@ namespace IOTCS.EdgeGateway.ResDriver
             var req = new RequestDto { ResourceId = "iotcs_test", Msg = JsonConvert.SerializeObject(data) };
             restRequest.AddJsonBody<RequestDto>(req);
             var response = await _httpClient.ExecuteAsync(restRequest).ConfigureAwait(false);
-            result = response.IsSuccessful;
+            result = response.get_IsSuccessful();
             restRequest = null;
 
             return result;

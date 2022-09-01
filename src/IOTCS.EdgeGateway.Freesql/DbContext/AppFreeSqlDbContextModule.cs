@@ -20,6 +20,7 @@ namespace IOTCS.EdgeGateway.Freesql
                 options.DbType = configuration["ConnectionStrings:DBReadWrite:DbType"];
                 options.DbUid = configuration["ConnectionStrings:DBReadWrite:DbUid"];
                 options.DbPwd = configuration["ConnectionStrings:DBReadWrite:DbPwd"];
+                options.Debug = configuration["Debug"].ToLower() == "true";
             });
         }
     }

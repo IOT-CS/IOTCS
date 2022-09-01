@@ -16,6 +16,8 @@ namespace IOTCS.EdgeGateway.Freesql.Extensions
 
         public string DbPwd { get; set; }
 
+        public bool Debug { get; set; }
+
         public DbContextOptions Value => this;
     }
 }
