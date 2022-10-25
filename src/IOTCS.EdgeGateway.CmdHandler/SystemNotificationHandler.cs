@@ -4,7 +4,6 @@ using IOTCS.EdgeGateway.Logging;
 using IOTCS.EdgeGateway.WsHandler;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,19 +18,18 @@ namespace IOTCS.EdgeGateway.CmdHandler
         public SystemNotificationHandler(WsMessageHandler messageHandler)
         {
             _logger = IocManager.Instance.GetService<ILoggerFactory>().CreateLogger("WebSocket");
-            _webSocket = messageHandler;//IocManager.Instance.GetService<WsMessageHandler>();
+            _webSocket = messageHandler;
         }
 
         public async Task Handle(SystemNotification notification, CancellationToken cancellationToken)
         {
             try
-            {
-                //var strString = HandleMessage(notification);
+            {                
                 await Send(notification);
             }
             catch (Exception e)
             {
-                _logger.Error($"OPCUA 系统消息解析异常，错误消息 => {e.Message},错误位置 => {e.StackTrace},");
+                _logger.Error($"系统消息通知异常，错误消息 => {e.Message},错误位置 => {e.StackTrace},");
             }          
         }
 
@@ -51,20 +49,5 @@ namespace IOTCS.EdgeGateway.CmdHandler
                 _logger.Error($"系统消息发送WebSocket信息到UI异常，异常信息 => {e.Message},位置 => {e.StackTrace}");
             }            
         }
-
-        //private string HandleMessage(SystemNotification message)
-        //{
-        //    var result = string.Empty;
-        //    var socketObject = new WebSocketProtocol<dynamic>();
-
-        //    if (message != null)
-        //    {
-        //        socketObject.RequestType = message.MsgType;
-        //        socketObject.Data = message.Message;
-        //        result = JsonConvert.SerializeObject(socketObject);
-        //    }
-
-        //    return result;
-        //}
     }
 }

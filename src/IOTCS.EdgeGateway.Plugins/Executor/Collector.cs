@@ -198,6 +198,11 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
                             siemens_s7_1500.Connect(e.Id);
                             _equipments.TryAdd(e.Id, siemens_s7_1500);
                             break;
+                        case "bacnet/ip":
+                            var bacnet_ip = new BACNetDriver.BACNetDriver();
+                            bacnet_ip.Connect(e.Id);
+                            _equipments.TryAdd(e.Id, bacnet_ip);
+                            break;
                     }
                 }
                 else
@@ -215,7 +220,7 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
             var result = string.Empty;
             var retResult = new List<dynamic>();
             IEnumerable<DataNodeDto> list = JsonConvert.DeserializeObject<IEnumerable<DataNodeDto>>(data);
-            Dictionary<string, string> keyValues = new Dictionary<string, string>();
+            Dictionary<string, dynamic> keyValues = new Dictionary<string, dynamic>();
             try
             {  
                 var device = _device.Where(w => w.Id == deviceID).FirstOrDefault();
@@ -226,7 +231,7 @@ namespace IOTCS.EdgeGateway.Plugins.Executor
                 keyValues.Add("DeviceID", deviceID);
                 keyValues.Add("GroupID", groupID);
                 keyValues.Add("Timestamp", DateTime.Now.ToString());
-                foreach (var e in list)  
+                foreach (var e in list)
                 {
                     keyValues.Add(e.FieldName, e.NodeValue);
                 }

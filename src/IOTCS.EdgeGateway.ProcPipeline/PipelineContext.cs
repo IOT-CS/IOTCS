@@ -18,8 +18,7 @@ namespace IOTCS.EdgeGateway.ProcPipeline
 {
     public class PipelineContext : IPipelineContext, IDisposable
     {
-        private NetMQActor _actor;
-        private PairSocket _shim;
+        private NetMQQueue<RouterMessage> _netmqQueue;
         private NetMQPoller _poller;
         private IMediator _mediator;
         private readonly ILogger _logger;
@@ -30,7 +29,7 @@ namespace IOTCS.EdgeGateway.ProcPipeline
 
         public PipelineContext()
         {
-            _actor = NetMQActor.Create(RunActor);
+            initialize();
             _mediator = IocManager.Instance.GetService<IMediator>();
             _diagnostics = IocManager.Instance.GetService<ISystemDiagnostics>();
             _uINotification = IocManager.Instance.GetService<IUINotification>();
@@ -39,35 +38,38 @@ namespace IOTCS.EdgeGateway.ProcPipeline
             resDrivers = IocManager.Instance.GetService<ConcurrentDictionary<string, IResourceDriver>>();
         }
 
-        private void RunActor(PairSocket shim)
-        {
-            this._shim = shim;
-            this._shim.ReceiveReady += _shim_ReceiveReady;
-            this._shim.SignalOK();
-            _poller = new NetMQPoller { shim };
-            _poller.Run();
-        }
-
-        private void _shim_ReceiveReady(object sender, NetMQSocketEventArgs e)
-        {
-            string command = e.Socket.ReceiveFrameString();
-            _logger.Info($"command => {command}");
-            switch (command)
-            {
-                case NetMQActor.EndShimMessage:
-                    _poller.Stop();
-                    break;
-                default:                    
-                    MessageRouter(command);
-                    break;
-            }
-        }
-
-        private void MessageRouter(string message)
+        private void initialize()
         {
             try
             {
-                var router = JsonConvert.DeserializeObject<RouterMessage>(message);
+                _netmqQueue = new NetMQQueue<RouterMessage>();
+                _poller = new NetMQPoller { _netmqQueue };
+                _netmqQueue.ReceiveReady += (sender, args) => MessageRouter(_netmqQueue.Dequeue());
+                _poller.RunAsync();
+            }
+            catch (Exception e)
+            {
+                if (_netmqQueue != null)
+                {
+                    _netmqQueue.Dispose();
+                }
+                _netmqQueue = null;
+                if (_poller != null)
+                {
+                    _poller.Dispose();
+                }
+                _poller = null;
+
+                var msg = $"Pipeline channel 初始化的时候异常，异常信息=>{e.Message}, 异常堆栈 => {e.StackTrace}。";
+                _logger.Info(msg);
+                _diagnostics.PublishDiagnosticsInfo(msg);
+            }
+        }
+
+        private void MessageRouter(RouterMessage router)
+        {
+            try
+            {                
                 var routerMsg = JsonConvert.DeserializeObject<dynamic>(router.Message);
                 var topic = Convert.ToString(routerMsg.Topic);
                 var deviceID = Convert.ToString(routerMsg.DeviceID);
@@ -107,31 +109,31 @@ namespace IOTCS.EdgeGateway.ProcPipeline
 
         public void SendPayload(RouterMessage router)
         {
-            if (_actor != null)
+            if (_netmqQueue != null && _poller != null)
             {
-                var message = new NetMQMessage();
-                var sendMsg = JsonConvert.SerializeObject(router);
-                message.Append(sendMsg);
-                _actor.SendMultipartMessage(message);
+                _netmqQueue.Enqueue(router);
             }
             else
             {
-                var msg = "Actor == null，请检查代码。";
+                var msg = "NetMQQueue<RouterMessage> == null 或者 NetMQPoller _poller == null，所以，上层消息总线无法将信息发到指定规则链当中，请检查代码。";
+                msg += $"输入信息 =>{JsonConvert.SerializeObject(router)}";
+                _logger.Info(msg); 
                 _diagnostics.PublishDiagnosticsInfo(msg);
             }
         }
 
         public void Dispose()
         {
-            if (_actor != null)
+            if (_netmqQueue != null)
             {
-                _actor.Dispose();
+                _netmqQueue.Dispose();
             }
-            if (_shim != null)
+            _netmqQueue = null;
+            if (_poller != null)
             {
-                _shim.Close();
-                _shim.Dispose();
+                _poller.Dispose();
             }
+            _poller = null;
             GC.SuppressFinalize(this);
         }
     }

@@ -55,10 +55,22 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                         port = Convert.ToInt32(djson.Port.Value);
                         timeout = Convert.ToInt32(djson.TimeOut.Value);
                         slot = Convert.ToByte(djson.SLOT);
-                        _siemensS7NetClient = new SiemensS7Net(SiemensPLCS.S1500, host) { Port = port, Slot = slot, ConnectTimeOut = timeout };
-                        _siemensS7NetClient.ConnectServer();
+                        _siemensS7NetClient = new SiemensS7Net(SiemensPLCS.S1500, host) { Port = port, Slot = slot, ConnectTimeOut = timeout };                        
+                        var OperResult = _siemensS7NetClient.ConnectServer();
+                        if (OperResult.IsSuccess)
+                        {
+                            var msg = $"Siemens S7 1500 Net 连接成功！Siemens host => {host}";
+                            _logger.Error(msg);
+                            _diagnostics.PublishDiagnosticsInfo(msg);
+                        }
+                        else
+                        {
+                            var msg = $"Siemens S7 1500 Net 连接失败！失败的Siemens host => {host}";
+                            _logger.Error(msg);
+                            _diagnostics.PublishDiagnosticsInfo(msg);
+                        }
 
-                        result = true;
+                        result = OperResult.IsSuccess;
                     }
                     else
                     {

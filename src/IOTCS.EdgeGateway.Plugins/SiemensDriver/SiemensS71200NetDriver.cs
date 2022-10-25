@@ -51,9 +51,20 @@ namespace IOTCS.EdgeGateway.Plugins.SiemensDriver
                         port = Convert.ToInt32(djson.Port);
                         timeout = Convert.ToInt32(djson.TimeOut);
                         _siemensS7NetClient = new SiemensS7Net(SiemensPLCS.S1200, host) { Port = port,Slot = djson.SLOT, ConnectTimeOut = timeout };
-                        _siemensS7NetClient.ConnectServer();
-
-                        result = true;
+                        var OperResult = _siemensS7NetClient.ConnectServer(); 
+                        if (OperResult.IsSuccess)
+                        {
+                            var msg = $"Siemens S7 1200 Net 连接成功！Siemens host => {host}";
+                            _logger.Error(msg);
+                            _diagnostics.PublishDiagnosticsInfo(msg);
+                        }
+                        else
+                        {
+                            var msg = $"Siemens S7 1200 Net 连接失败！失败的Siemens host => {host}";
+                            _logger.Error(msg);
+                            _diagnostics.PublishDiagnosticsInfo(msg);
+                        }
+                        result = OperResult.IsSuccess;
                     }
                     else
                     {

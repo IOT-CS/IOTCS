@@ -4,5 +4,6 @@ namespace IOTCS.EdgeGateway.Plugins.BACNetDriver
 {
     public interface IBACNetDriver : IDriver
     {
+
     }
 }

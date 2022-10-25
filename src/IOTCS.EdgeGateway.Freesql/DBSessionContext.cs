@@ -1,6 +1,7 @@
 ﻿using FreeSql;
 using Microsoft.Extensions.Options;
 using System;
+using System.IO;
 
 namespace IOTCS.EdgeGateway.Freesql
 {
@@ -68,9 +69,9 @@ namespace IOTCS.EdgeGateway.Freesql
                     dbType = DataType.Sqlite;
                     string dbPath = string.Empty;
                     if (options.Debug)
-                        dbPath = System.IO.Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName + "\\Database\\iotcs.db";
+                        dbPath = Path.Combine(System.IO.Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "Database", "iotcs.db");
                     else
-                        dbPath = System.IO.Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory) + "\\Database\\iotcs.db";
+                        dbPath = Path.Combine(System.IO.Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).FullName, "Database", "iotcs.db");
                     connectionStrings = $"Data Source={dbPath}";
                     break;
                 default:

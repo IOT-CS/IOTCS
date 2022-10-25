@@ -59,6 +59,10 @@ namespace IOTCS.EdgeGateway.Application.Imps
                     results.Add(dataLocation);
                 }
             }
+            else
+            {
+                results.AddRange(node);
+            }
             return results;
         }
 

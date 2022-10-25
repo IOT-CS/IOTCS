@@ -77,7 +77,7 @@ namespace IOTCS.EdgeGateway.Plugins.ModbusDriver
         {
             var result = false;
 
-            result = string.IsNullOrEmpty(_busTcpClient.ConnectionId) ? false : true;
+            result = (_busTcpClient == null || string.IsNullOrEmpty(_busTcpClient.ConnectionId)) ? false : true;
 
             return result;
         }
@@ -88,8 +88,110 @@ namespace IOTCS.EdgeGateway.Plugins.ModbusDriver
 
             if (IsAviable())
             {
+                List<DataNodeDto> list = new List<DataNodeDto>();
                 var locations = _dataLocations.Where(w => w.ParentId == groupID);
+                foreach (var d in locations)
+                {
+                    byte station = 1;
+                    string address = string.Empty;
+                    if (!string.IsNullOrEmpty(d.NodeAddress) && d.NodeAddress.IndexOf('!') != -1)
+                    {
+                        var splitArray = d.NodeAddress.Split(new char[] { '!' });
+                        station = Convert.ToByte(splitArray[0]);
+                        address = splitArray[1];
+                    }
+                    //并行读取所有数据
+                    switch (d.NodeType)
+                    {
+                        case "string":
+                            _busTcpClient.Station = station;
+                            var sResult = _busTcpClient.ReadString(address, Convert.ToUInt16(d.NodeLength));
+                            DataNodeDto stringNode = new DataNodeDto
+                            {
+                                FieldName = d.DisplayName,
+                                NodeId = d.NodeAddress,
+                                NodeValue = sResult.Content,
+                                StatusCode = "Good"
+                            };
+                            list.Add(stringNode);
+                            break;
+                        case "bit":
+                            _busTcpClient.Station = station;
+                            var bitResult = _busTcpClient.ReadBool(address);
+                            DataNodeDto bitNode = new DataNodeDto
+                            {
+                                FieldName = d.DisplayName,
+                                NodeId = d.NodeAddress,
+                                NodeValue = bitResult.Content.ToString(),
+                                StatusCode = "Good"
+                            };
+                            list.Add(bitNode);
+                            break;
+                        case "int16":
+                            _busTcpClient.Station = station;
+                            var int16Result = _busTcpClient.ReadInt16(address);
+                            DataNodeDto int16Node = new DataNodeDto
+                            {
+                                FieldName = d.DisplayName,
+                                NodeId = d.NodeAddress,
+                                NodeValue = int16Result.Content.ToString(),
+                                StatusCode = "Good"
+                            };
+                            list.Add(int16Node);
+                            break;
+                        case "uint16":
+                            _busTcpClient.Station = station;
+                            var uint16Result = _busTcpClient.ReadUInt16(address);
+                            DataNodeDto uint16Node = new DataNodeDto
+                            {
+                                FieldName = d.DisplayName,
+                                NodeId = d.NodeAddress,
+                                NodeValue = uint16Result.Content.ToString(),
+                                StatusCode = "Good"
+                            };
+                            list.Add(uint16Node);
+                            break;
+                        case "int32":
+                            _busTcpClient.Station = station;
+                            var int32Result = _busTcpClient.ReadInt32(address);
+                            DataNodeDto int32Node = new DataNodeDto
+                            {
+                                FieldName = d.DisplayName,
+                                NodeId = d.NodeAddress,
+                                NodeValue = int32Result.Content.ToString(),
+                                StatusCode = "Good"
+                            };
+                            list.Add(int32Node);
+                            break;
+                        case "uint32":
+                            _busTcpClient.Station = station;
+                            var uint32Result = _busTcpClient.ReadUInt32(address);
+                            DataNodeDto uint32Node = new DataNodeDto
+                            {
+                                FieldName = d.DisplayName,
+                                NodeId = d.NodeAddress,
+                                NodeValue = uint32Result.Content.ToString(),
+                                StatusCode = "Good"
+                            };
+                            list.Add(uint32Node);
+                            break;
+                        case "float":
+                            _busTcpClient.Station = station;
+                            var floatResult = _busTcpClient.ReadFloat(address);
+                            DataNodeDto floatNode = new DataNodeDto
+                            {
+                                FieldName = d.DisplayName,
+                                NodeId = d.NodeAddress,
+                                NodeValue = floatResult.Content.ToString(),
+                                StatusCode = "Good"
+                            };
+                            list.Add(floatNode);
+                            break;
+                    }
+                }
 
+                result = JsonConvert.SerializeObject(list);
+                list.Clear();
             }
             else
             {
